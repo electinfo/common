@@ -1,0 +1,43 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: common-pypi-publish
+  namespace: tekton-pipelines
+spec:
+  description: Build and publish Python package to Nexus PyPI registry
+  workspaces:
+    - name: source
+      description: Workspace containing the source code
+  steps:
+    - name: publish
+      image: python:3.12-slim
+      workingDir: $(workspaces.source.path)
+      env:
+        - name: NEXUS_USER
+          valueFrom:
+            secretKeyRef:
+              name: nexus-credentials
+              key: username
+        - name: NEXUS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: nexus-credentials
+              key: password
+      script: |
+        #!/bin/bash
+        set -e
+
+        echo "=== Installing build tools ==="
+        pip install build twine
+
+        echo "=== Building Python package ==="
+        python -m build
+
+        echo "=== Publishing to PyPI registry ==="
+        twine upload \
+          --repository-url https://repo.elect.info/repository/pypi-hosted/ \
+          --username "${NEXUS_USER}" \
+          --password "${NEXUS_PASSWORD}" \
+          dist/*
+
+        echo "=== PyPI publish complete ==="

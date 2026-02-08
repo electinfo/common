@@ -1,0 +1,27 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: common-pytest
+  namespace: tekton-pipelines
+spec:
+  description: Run Python tests for electinfo-common
+  workspaces:
+    - name: source
+      description: Workspace containing the source code
+  steps:
+    - name: install
+      image: python:3.12-slim
+      workingDir: $(workspaces.source.path)
+      script: |
+        #!/bin/bash
+        set -e
+        echo "=== Installing electinfo-common with dev dependencies ==="
+        pip install -e ".[dev]"
+    - name: test
+      image: python:3.12-slim
+      workingDir: $(workspaces.source.path)
+      script: |
+        #!/bin/bash
+        set -e
+        echo "=== Running pytest ==="
+        pytest src/test/python/ -v

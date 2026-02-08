@@ -1,0 +1,82 @@
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: common-publish
+  namespace: tekton-pipelines
+spec:
+  description: Test and publish electinfo-common to npm, Maven, and PyPI
+  params:
+    - name: repo-url
+      type: string
+      description: Git repository URL
+      default: https://github.com/electinfo/common.git
+    - name: revision
+      type: string
+      description: Git revision to build
+      default: main
+  workspaces:
+    - name: shared-workspace
+      description: Shared workspace for source code
+  tasks:
+    - name: clone
+      taskRef:
+        name: electinfo-git-clone
+      params:
+        - name: repo-url
+          value: $(params.repo-url)
+        - name: revision
+          value: $(params.revision)
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+
+    - name: pytest
+      taskRef:
+        name: common-pytest
+      runAfter:
+        - clone
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+
+    - name: npm-publish
+      taskRef:
+        name: common-npm-publish
+      runAfter:
+        - pytest
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+
+    - name: sbt-publish
+      taskRef:
+        name: common-sbt-publish
+      runAfter:
+        - pytest
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+
+    - name: pypi-publish
+      taskRef:
+        name: common-pypi-publish
+      runAfter:
+        - pytest
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+
+  finally:
+    - name: report
+      taskSpec:
+        steps:
+          - name: summary
+            image: busybox
+            script: |
+              echo "=== Build Summary ==="
+              echo "Repository: $(params.repo-url)"
+              echo "Revision: $(params.revision)"
+              echo "Published to:"
+              echo "  npm:   https://repo.elect.info/repository/npm-hosted/"
+              echo "  Maven: https://repo.elect.info/repository/maven-releases/"
+              echo "  PyPI:  https://repo.elect.info/repository/pypi-hosted/"

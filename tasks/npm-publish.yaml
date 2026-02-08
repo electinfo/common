@@ -1,0 +1,47 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: common-npm-publish
+  namespace: tekton-pipelines
+spec:
+  description: Build and publish TypeScript package to Nexus npm registry
+  workspaces:
+    - name: source
+      description: Workspace containing the source code
+  steps:
+    - name: publish
+      image: node:20-alpine
+      workingDir: $(workspaces.source.path)
+      env:
+        - name: NEXUS_USER
+          valueFrom:
+            secretKeyRef:
+              name: nexus-credentials
+              key: username
+        - name: NEXUS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: nexus-credentials
+              key: password
+      script: |
+        #!/bin/sh
+        set -e
+
+        echo "=== Installing dependencies ==="
+        npm install
+
+        echo "=== Building TypeScript ==="
+        npm run build
+
+        echo "=== Configuring npm registry ==="
+        # Encode credentials for npm auth
+        AUTH=$(echo -n "${NEXUS_USER}:${NEXUS_PASSWORD}" | base64)
+        cat > .npmrc << EOF
+        //repo.elect.info/repository/npm-hosted/:_auth=${AUTH}
+        //repo.elect.info/repository/npm-hosted/:always-auth=true
+        EOF
+
+        echo "=== Publishing to npm registry ==="
+        npm publish --registry https://repo.elect.info/repository/npm-hosted/
+
+        echo "=== npm publish complete ==="

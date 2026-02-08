@@ -1,0 +1,61 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: common-sbt-publish
+  namespace: tekton-pipelines
+spec:
+  description: Build and publish Scala artifacts to Nexus using sbt publish
+  workspaces:
+    - name: source
+      description: Workspace containing the source code
+  steps:
+    - name: publish
+      image: sbtscala/scala-sbt:eclipse-temurin-21.0.5_11_1.10.6_3.6.2
+      workingDir: $(workspaces.source.path)
+      env:
+        - name: JAVA_OPTS
+          value: "-Xmx4g -Xms1g"
+        - name: IVY_HOME
+          value: /tmp/.ivy2
+        - name: NEXUS_USER
+          valueFrom:
+            secretKeyRef:
+              name: nexus-credentials
+              key: username
+        - name: NEXUS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: nexus-credentials
+              key: password
+      script: |
+        #!/bin/bash
+        set -e
+
+        echo "=== Publishing to Nexus ==="
+        echo "Working directory: $(pwd)"
+
+        # Create SBT credentials file
+        mkdir -p ~/.sbt/1.0
+        cat > ~/.sbt/1.0/credentials.sbt << EOF
+        credentials += Credentials(
+          "Sonatype Nexus Repository Manager",
+          "repo.elect.info",
+          "$NEXUS_USER",
+          "$NEXUS_PASSWORD"
+        )
+        EOF
+
+        echo "Credentials configured for repo.elect.info"
+
+        # Extract version info before publishing
+        VERSION=$(grep -m1 'version :=' build.sbt | sed 's/.*"\(.*\)".*/\1/')
+        ORG=$(grep -m1 'organization :=' build.sbt | sed 's/.*"\(.*\)".*/\1/')
+        NAME=$(grep -m1 'name :=' build.sbt | sed 's/.*"\(.*\)".*/\1/')
+
+        echo "Publishing: $ORG:$NAME:$VERSION"
+
+        # Run sbt publish
+        sbt publish
+
+        echo "=== Publish Complete ==="
+        echo "Artifact: $ORG:$NAME:$VERSION"

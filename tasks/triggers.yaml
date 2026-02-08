@@ -1,0 +1,126 @@
+---
+# TriggerBinding extracts params from GitHub push webhook
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerBinding
+metadata:
+  name: common-binding
+  namespace: tekton-pipelines
+spec:
+  params:
+    - name: revision
+      value: $(body.after)
+    - name: repo-url
+      value: $(body.repository.clone_url)
+    # Clean branch name from CEL overlay (strips refs/heads/ prefix)
+    - name: branch
+      value: $(extensions.branch_name)
+---
+# TriggerTemplate creates PipelineRun for common-publish
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerTemplate
+metadata:
+  name: common-template
+  namespace: tekton-pipelines
+spec:
+  params:
+    - name: revision
+      default: main
+    - name: repo-url
+      default: https://github.com/electinfo/common.git
+    - name: branch
+      default: main
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1
+      kind: PipelineRun
+      metadata:
+        generateName: common-publish-$(tt.params.branch)-
+        labels:
+          tekton.dev/pipeline: common-publish
+          electinfo.io/branch: $(tt.params.branch)
+      spec:
+        pipelineRef:
+          name: common-publish
+        taskRunTemplate:
+          serviceAccountName: electinfo-build-sa
+        params:
+          - name: repo-url
+            value: $(tt.params.repo-url)
+          - name: revision
+            value: $(tt.params.revision)
+        workspaces:
+          - name: shared-workspace
+            volumeClaimTemplate:
+              spec:
+                accessModes:
+                  - ReadWriteOnce
+                resources:
+                  requests:
+                    storage: 1Gi
+---
+# EventListener for common repo webhooks
+# Accessible at common.webhook.elect.info
+apiVersion: triggers.tekton.dev/v1beta1
+kind: EventListener
+metadata:
+  name: common-listener
+  namespace: tekton-pipelines
+spec:
+  serviceAccountName: common-trigger-sa
+  triggers:
+    - name: common-push
+      interceptors:
+        - ref:
+            name: github
+          params:
+            - name: eventTypes
+              value: ["push"]
+        - ref:
+            name: cel
+          params:
+            # No file filter - triggers on all pushes
+            - name: filter
+              value: "true"
+            # Add overlay to extract clean branch name for k8s resource naming
+            - name: overlays
+              value:
+                - key: branch_name
+                  expression: "body.ref.split('/')[2]"
+      bindings:
+        - ref: common-binding
+      template:
+        ref: common-template
+---
+# Service account for common trigger event listener
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: common-trigger-sa
+  namespace: tekton-pipelines
+---
+# Trigger SA needs to create PipelineRuns
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: common-trigger-binding
+  namespace: tekton-pipelines
+subjects:
+  - kind: ServiceAccount
+    name: common-trigger-sa
+    namespace: tekton-pipelines
+roleRef:
+  kind: ClusterRole
+  name: tekton-triggers-eventlistener-roles
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: common-trigger-clusterbinding
+subjects:
+  - kind: ServiceAccount
+    name: common-trigger-sa
+    namespace: tekton-pipelines
+roleRef:
+  kind: ClusterRole
+  name: tekton-triggers-eventlistener-clusterroles
+  apiGroup: rbac.authorization.k8s.io

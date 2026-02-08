@@ -1,0 +1,20 @@
+# Tekton tasks and pipelines for the common repo
+# Deploys to tekton-pipelines namespace
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: common-tekton
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/electinfo/common.git'
+    path: tasks
+    targetRevision: main
+  destination:
+    namespace: tekton-pipelines
+    server: 'https://kubernetes.default.svc'
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

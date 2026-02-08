@@ -1,0 +1,48 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: electinfo-git-clone
+  namespace: tekton-pipelines
+spec:
+  description: Clone a git repository
+  params:
+    - name: repo-url
+      type: string
+      description: Git repository URL
+    - name: revision
+      type: string
+      description: Git revision (branch, tag, or commit)
+      default: main
+  workspaces:
+    - name: source
+      description: Workspace to clone the repo into
+  steps:
+    - name: clone
+      image: alpine/git:latest
+      env:
+        - name: GIT_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: git-credentials
+              key: username
+        - name: GIT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: git-credentials
+              key: password
+      script: |
+        #!/bin/sh
+        set -e
+        cd $(workspaces.source.path)
+        # Mark workspace as safe directory (needed when running as non-root)
+        git config --global --add safe.directory $(workspaces.source.path)
+        # Configure git credential helper
+        git config --global credential.helper store
+        echo "https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com" > ~/.git-credentials
+        # Clone the repository (full clone to support commit SHAs)
+        git clone $(params.repo-url) .
+        # Checkout the specific revision (works for branches, tags, and commit SHAs)
+        git checkout $(params.revision)
+        echo "Cloned $(params.repo-url) at $(params.revision)"
+        git log -1 --oneline
+        ls -la
