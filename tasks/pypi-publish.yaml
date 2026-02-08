@@ -38,6 +38,6 @@ spec:
           --repository-url https://repo.elect.info/repository/pypi-hosted/ \
           --username "${NEXUS_USER}" \
           --password "${NEXUS_PASSWORD}" \
-          dist/*
+          dist/*.tar.gz dist/*.whl
 
         echo "=== PyPI publish complete ==="
