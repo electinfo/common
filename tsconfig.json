@@ -18,10 +18,10 @@
     "experimentalDecorators": true,
     "strictPropertyInitialization": false,
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": ".",
     "resolveJsonModule": true,
     "esModuleInterop": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/main/typescript/**/*"],
   "exclude": ["node_modules", "dist"]
 }

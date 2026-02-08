@@ -2,8 +2,8 @@
  * @electinfo/common - Shared schemas and constants
  */
 
-import urlPatterns from '../schemas/url-patterns.json';
-import constants from '../schemas/constants.json';
+import urlPatterns from '../../../schemas/url-patterns.json';
+import constants from '../../../schemas/constants.json';
 
 // Re-export raw schemas
 export { urlPatterns, constants };

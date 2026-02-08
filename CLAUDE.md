@@ -8,7 +8,7 @@
 > ~/git/electinfo/rundeck/ROADMAP.md
 > ```
 
-Shared schemas, templates, and constants for the electinfo platform. Published to both Maven (for Scala/Java) and npm (for TypeScript/JavaScript).
+Shared schemas, templates, and constants for the electinfo platform. Published to npm (TypeScript/JavaScript), Maven (Scala/Java), and PyPI (Python).
 
 ## Purpose
 
@@ -27,12 +27,29 @@ common/
 ├── package.json           # npm package config
 ├── build.sbt              # sbt/Maven config
 ├── tsconfig.json          # TypeScript config
+├── pyproject.toml         # Python package config (hatchling)
 ├── schemas/               # JSON schemas
 │   ├── url-patterns.json  # Entity URL patterns
 │   └── constants.json     # Shared constants
 ├── templates/             # Shared templates (future)
-└── src/                   # TypeScript source
-    └── index.ts           # Main exports
+└── src/
+    ├── main/
+    │   ├── typescript/
+    │   │   └── index.ts           # TypeScript exports
+    │   ├── python/
+    │   │   └── electinfo_common/
+    │   │       ├── __init__.py    # Public API
+    │   │       ├── _schemas.py    # JSON schema loading
+    │   │       ├── constants.py   # Constants class
+    │   │       ├── url_patterns.py# UrlPatterns class
+    │   │       ├── slug.py        # make_slug()
+    │   │       └── py.typed       # PEP 561 marker
+    │   └── scala/                 # (future: Scala wrappers)
+    └── test/
+        └── python/
+            ├── test_constants.py
+            ├── test_slug.py
+            └── test_url_patterns.py
 ```
 
 ## Publishing
@@ -64,6 +81,20 @@ libraryDependencies += "info.elect" %% "electinfo-common" % "0.1.0"
 resolvers += "Nexus" at "https://repo.elect.info/repository/maven-public/"
 ```
 
+### PyPI (Python)
+
+Published to: `https://repo.elect.info/repository/pypi-hosted/`
+
+```bash
+python -m build
+twine upload --repository-url https://repo.elect.info/repository/pypi-hosted/ dist/*
+```
+
+Consumers:
+```bash
+pip install electinfo-common --index-url https://repo.elect.info/repository/pypi-group/simple/
+```
+
 ## Usage
 
 ### TypeScript
@@ -80,6 +111,24 @@ const name = Constants.stateNames['CA'];
 // => "California"
 ```
 
+### Python
+
+```python
+from electinfo_common import UrlPatterns, Constants, make_slug
+
+# Generate candidate URL
+url = UrlPatterns.candidate.senate("ca", "john-smith")
+# => "/candidates/senate/ca/john-smith/"
+
+# Get state name
+name = Constants.state_names["CA"]
+# => "California"
+
+# Generate slug
+slug = make_slug("John Smith")
+# => "john-smith"
+```
+
 ### Scala
 
 ```scala
@@ -94,12 +143,35 @@ val name = Constants.stateNames("CA")
 // => "California"
 ```
 
+## Development
+
+### Python
+
+```bash
+# Install in editable mode with dev dependencies
+pip install -e ".[dev]"
+
+# Run tests
+pytest src/test/python/ -v
+```
+
+### TypeScript
+
+```bash
+# Install dependencies
+npm install
+
+# Type-check
+npx tsc --noEmit
+```
+
 ## CI/CD
 
 Tekton pipeline triggers on push to main:
 1. Runs tests
 2. Publishes to npm (repo.elect.info)
 3. Publishes to Maven (repo.elect.info)
+4. Publishes to PyPI (repo.elect.info)
 
 ## Adoption Plan
 
@@ -107,14 +179,15 @@ Tekton pipeline triggers on push to main:
 - [x] Create repository structure
 - [x] Define URL patterns schema
 - [x] Define constants schema
-- [ ] Add TypeScript exports
+- [x] Add TypeScript exports
+- [x] Add Python package with tests
 - [ ] Add Scala resource loading
 - [ ] Set up Tekton pipeline
-- [ ] Initial publish to npm and Maven
+- [ ] Initial publish to npm, Maven, and PyPI
 
 ### Phase 2: Migrate rundeck
 - [ ] Update Constants.scala to read from common
-- [ ] Update templates.py to read from common
+- [ ] Update templates.py to use electinfo-common
 - [ ] Remove duplicate constant definitions
 - [ ] Test static page generation
 
@@ -133,6 +206,6 @@ Tekton pipeline triggers on push to main:
 
 | Repository | Uses common for |
 |------------|-----------------|
-| rundeck | Static page URL generation (Scala) |
+| rundeck | Static page URL generation (Scala + Python) |
 | sites | Search result URL generation (TypeScript) |
 | graphql-server | Entity URL fields (TypeScript) |
