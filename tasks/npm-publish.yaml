@@ -36,10 +36,9 @@ spec:
         echo "=== Configuring npm registry ==="
         # Encode credentials for npm auth
         AUTH=$(echo -n "${NEXUS_USER}:${NEXUS_PASSWORD}" | base64)
-        cat > .npmrc << EOF
-        //repo.elect.info/repository/npm-hosted/:_auth=${AUTH}
-        //repo.elect.info/repository/npm-hosted/:always-auth=true
-        EOF
+        printf '//repo.elect.info/repository/npm-hosted/:_auth=%s\n//repo.elect.info/repository/npm-hosted/:always-auth=true\n' "${AUTH}" > .npmrc
+        echo "=== .npmrc contents ==="
+        cat .npmrc
 
         echo "=== Publishing to npm registry ==="
         npm publish --registry https://repo.elect.info/repository/npm-hosted/
