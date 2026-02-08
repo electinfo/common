@@ -1,0 +1,28 @@
+{
+  "name": "@electinfo/common",
+  "version": "0.1.0",
+  "description": "Shared schemas, templates, and constants for electinfo",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "schemas",
+    "templates"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/electinfo/common.git"
+  },
+  "author": "electinfo",
+  "license": "MIT",
+  "publishConfig": {
+    "registry": "https://repo.elect.info/repository/npm-hosted/"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "URL Patterns",
+  "description": "Canonical URL patterns for electinfo entity pages",
+  "type": "object",
+  "properties": {
+    "candidate": {
+      "type": "object",
+      "properties": {
+        "president": {
+          "type": "string",
+          "pattern": "/candidates/president/us/{slug}/"
+        },
+        "senate": {
+          "type": "string",
+          "pattern": "/candidates/senate/{state}/{slug}/",
+          "description": "state = lowercase 2-letter code (e.g., 'ca')"
+        },
+        "house": {
+          "type": "string",
+          "pattern": "/candidates/house/{state}-{district}/{slug}/",
+          "description": "state = lowercase 2-letter code, district = 2-digit padded (e.g., 'ca-12')"
+        }
+      }
+    },
+    "committee": {
+      "type": "string",
+      "pattern": "/committees/{type}/{slug}-{id}/",
+      "description": "type = committee type slug, id = lowercase FEC ID"
+    },
+    "individual": {
+      "type": "string",
+      "pattern": "/individuals/{slug}-i-{id}/",
+      "description": "id = first 12 chars of MD5 hash (lowercase)"
+    },
+    "employer": {
+      "type": "string",
+      "pattern": "/employers/{slug}-{id}/",
+      "description": "id = MD5 hash without O- prefix (lowercase)"
+    },
+    "vendor": {
+      "type": "string",
+      "pattern": "/vendors/{slug}-{id}/",
+      "description": "id = MD5 hash without V- prefix (lowercase)"
+    },
+    "party": {
+      "type": "string",
+      "pattern": "/parties/{slug}/"
+    },
+    "office": {
+      "type": "object",
+      "properties": {
+        "president": {
+          "type": "string",
+          "pattern": "/offices/president/"
+        },
+        "senate": {
+          "type": "string",
+          "pattern": "/offices/senate/{state}-{class}/",
+          "description": "state = lowercase code, class = 1, 2, or 3"
+        },
+        "house": {
+          "type": "string",
+          "pattern": "/offices/house/{state}-{district}/",
+          "description": "state = lowercase code, district = 2-digit padded"
+        }
+      }
+    },
+    "district": {
+      "type": "string",
+      "pattern": "/districts/{slug}/"
+    },
+    "state": {
+      "type": "string",
+      "pattern": "/states/{slug}/"
+    },
+    "cycle": {
+      "type": "string",
+      "pattern": "/elections/{year}/"
+    }
+  }
+}
