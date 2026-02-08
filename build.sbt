@@ -1,5 +1,5 @@
 ThisBuild / organization := "info.elect"
-ThisBuild / version := "0.1.0"
+ThisBuild / version := "0.1.0-SNAPSHOT"
 ThisBuild / scalaVersion := "2.13.12"
 
 lazy val root = (project in file("."))
@@ -12,6 +12,6 @@ lazy val root = (project in file("."))
     Compile / unmanagedResourceDirectories += baseDirectory.value / "schemas",
     Compile / unmanagedResourceDirectories += baseDirectory.value / "templates",
     // Publish to Nexus
-    publishTo := Some("Nexus" at "https://repo.elect.info/repository/maven-releases/"),
+    publishTo := Some("Nexus" at "https://repo.elect.info/repository/maven-snapshots/"),
     credentials += Credentials(Path.userHome / ".sbt" / ".credentials")
   )

@@ -78,5 +78,5 @@ spec:
               echo "Revision: $(params.revision)"
               echo "Published to:"
               echo "  npm:   https://repo.elect.info/repository/npm-hosted/"
-              echo "  Maven: https://repo.elect.info/repository/maven-releases/"
+              echo "  Maven: https://repo.elect.info/repository/maven-snapshots/"
               echo "  PyPI:  https://repo.elect.info/repository/pypi-hosted/"
