@@ -167,11 +167,19 @@ npx tsc --noEmit
 
 ## CI/CD
 
-Tekton pipeline triggers on push to main:
-1. Runs tests
-2. Publishes to npm (repo.elect.info)
-3. Publishes to Maven (repo.elect.info)
-4. Publishes to PyPI (repo.elect.info)
+Tekton pipeline (`common-publish`) triggers on push to main via GitHub webhook at `common.webhook.elect.info`.
+
+Pipeline flow:
+1. `clone` — clones repo using `git-credentials` secret
+2. `pytest` — installs package, runs `pytest src/test/python/ -v`
+3. Parallel publish (all run after pytest):
+   - `npm-publish` — builds TypeScript, publishes to npm-hosted
+   - `sbt-publish` — publishes Scala artifacts to maven-releases
+   - `pypi-publish` — builds wheel, uploads to pypi-hosted
+
+All registries hosted at `repo.elect.info`. Credentials from `nexus-credentials` secret.
+
+Resources in `tasks/` deployed via ArgoCD (`application.yaml` at repo root).
 
 ## Adoption Plan
 
@@ -182,7 +190,7 @@ Tekton pipeline triggers on push to main:
 - [x] Add TypeScript exports
 - [x] Add Python package with tests
 - [ ] Add Scala resource loading
-- [ ] Set up Tekton pipeline
+- [x] Set up Tekton pipeline
 - [ ] Initial publish to npm, Maven, and PyPI
 
 ### Phase 2: Migrate rundeck
