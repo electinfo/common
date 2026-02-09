@@ -1,0 +1,18 @@
+{
+  "entityTypes": {
+    "Candidate":  { "plural": "candidates" },
+    "Committee":  { "plural": "committees" },
+    "Individual": { "plural": "individuals" },
+    "Employer":   { "plural": "employers" },
+    "Vendor":     { "plural": "vendors" },
+    "Party":      { "plural": "parties" },
+    "State":      { "plural": "states" },
+    "District":   { "plural": "districts" },
+    "Office":     { "plural": "offices" },
+    "Cycle":      { "plural": "cycles" },
+    "County":     { "plural": "counties" },
+    "Place":      { "plural": "places" },
+    "PostalCode": { "plural": "postalcodes" },
+    "Precinct":   { "plural": "precincts" }
+  }
+}

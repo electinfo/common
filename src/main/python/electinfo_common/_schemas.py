@@ -28,3 +28,4 @@ def _load_schema(name: str) -> dict:
 
 url_patterns: dict = _load_schema("url-patterns.json")
 constants: dict = _load_schema("constants.json")
+entity_types: dict = _load_schema("entity-types.json")

@@ -1,6 +1,6 @@
 {
   "name": "@electinfo/common",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Shared schemas, templates, and constants for electinfo",
   "main": "dist/src/main/typescript/index.js",
   "types": "dist/src/main/typescript/index.d.ts",

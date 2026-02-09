@@ -4,9 +4,10 @@
 
 import urlPatterns from '../../../schemas/url-patterns.json';
 import constants from '../../../schemas/constants.json';
+import entityTypesSchema from '../../../schemas/entity-types.json';
 
 // Re-export raw schemas
-export { urlPatterns, constants };
+export { urlPatterns, constants, entityTypesSchema };
 
 // Type definitions
 export interface UrlPatternConfig {
@@ -74,4 +75,18 @@ export function makeSlug(name: string): string {
     .replace(/\s+/g, '-')
     .replace(/-+/g, '-')
     .replace(/^-|-$/g, '');
+}
+
+// Entity type registry
+const entityTypes = entityTypesSchema.entityTypes as Record<string, { plural: string }>;
+
+/**
+ * Returns the canonical path for an entity: {plural}/{id.toLowerCase()}
+ */
+export function canonicalPath(entityType: string, id: string): string {
+  const config = entityTypes[entityType];
+  if (!config) {
+    throw new Error(`Unknown entity type: ${entityType}`);
+  }
+  return `${config.plural}/${id.toLowerCase()}`;
 }
