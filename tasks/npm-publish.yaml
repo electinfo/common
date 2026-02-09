@@ -34,9 +34,10 @@ spec:
         npm run build
 
         echo "=== Configuring npm registry ==="
-        # Encode credentials for npm auth
+        # Use internal Nexus service URL to bypass Traefik (which blocks %2F in scoped package names)
+        NEXUS_URL="http://nexus-nexus-repository-manager.nexus.svc.cluster.local:8081/repository/npm-hosted/"
         AUTH=$(echo -n "${NEXUS_USER}:${NEXUS_PASSWORD}" | base64)
-        printf 'registry=https://repo.elect.info/repository/npm-hosted/\n//repo.elect.info/repository/npm-hosted/:_auth=%s\n//repo.elect.info/repository/npm-hosted/:always-auth=true\nemail=admin@elect.info\n' "${AUTH}" > .npmrc
+        printf 'registry=%s\n//nexus-nexus-repository-manager.nexus.svc.cluster.local:8081/repository/npm-hosted/:_auth=%s\n' "${NEXUS_URL}" "${AUTH}" > .npmrc
         echo "=== .npmrc contents ==="
         cat .npmrc
 

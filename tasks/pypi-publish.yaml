@@ -35,7 +35,7 @@ spec:
 
         echo "=== Publishing to PyPI registry ==="
         twine upload \
-          --repository-url https://repo.elect.info/repository/pypi-hosted/ \
+          --repository-url http://nexus-nexus-repository-manager.nexus.svc.cluster.local:8081/repository/pypi-hosted/ \
           --username "${NEXUS_USER}" \
           --password "${NEXUS_PASSWORD}" \
           dist/*.tar.gz dist/*.whl
