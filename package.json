@@ -19,9 +19,6 @@
   },
   "author": "electinfo",
   "license": "MIT",
-  "publishConfig": {
-    "registry": "https://repo.elect.info/repository/npm-hosted/"
-  },
   "devDependencies": {
     "typescript": "^5.0.0"
   }
