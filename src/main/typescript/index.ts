@@ -77,6 +77,84 @@ export function makeSlug(name: string): string {
     .replace(/^-|-$/g, '');
 }
 
+// Neo4j integer helper - converts Neo4j Integer objects to JS numbers
+export function toNum(val: { toNumber?: () => number } | number | null | undefined): number {
+  if (!val) return 0;
+  if (typeof val === 'number') return val;
+  return typeof val.toNumber === 'function' ? val.toNumber() : Number(val);
+}
+
+// URL domain extraction
+export function extractDomain(url: string): string {
+  try {
+    // Extract hostname from URL string without URL constructor (not in all TS libs)
+    const match = url.match(/^https?:\/\/([^/:?#]+)/);
+    if (match) return match[1].replace(/^www\./, '');
+    return url.split('/')[2] || url;
+  } catch {
+    return url.split('/')[2] || url;
+  }
+}
+
+// GDELT GraphQL type definitions (shared between graphql-server and gdelt-graphql-server)
+export const gdeltTypeDefs = `
+  type GdeltArticle {
+    url: String!
+    gkgrecordid: String
+    date: String!
+    tone: Float
+    sourceDomain: String
+    coMentionedPersons: [String!]
+    coMentionedOrganizations: [String!]
+    coMentionedLocations: [String!]
+    themes: [String!]
+  }
+
+  type GdeltEvent {
+    globaleventid: String!
+    date: String!
+    actor1name: String
+    actor2name: String
+    eventcode: String
+    goldsteinscale: Float
+    avgtone: Float
+    sourceurl: String
+    actiongeo_fullname: String
+    actiongeo_countrycode: String
+  }
+
+  type EntityBadge {
+    id: String!
+    type: String!
+    name: String!
+    gdeltPersonId: String
+  }
+
+  type EntityNewsResponse {
+    entityId: String!
+    entityType: String!
+    entityName: String
+    articles: [GdeltArticle!]!
+    totalArticles: Int!
+  }
+
+  type EntityEventsResponse {
+    entityId: String!
+    events: [GdeltEvent!]!
+    totalEvents: Int!
+  }
+
+  type NewsFeedItem {
+    article: GdeltArticle!
+    matchedEntities: [EntityBadge!]!
+  }
+
+  type NewsFeedResponse {
+    items: [NewsFeedItem!]!
+    hasMore: Boolean!
+  }
+`;
+
 // Entity type registry
 const entityTypes = entityTypesSchema.entityTypes as Record<string, { plural: string }>;
 
