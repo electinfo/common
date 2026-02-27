@@ -16,7 +16,7 @@ from electinfo_common import canonical_path
         ("State", "CA", "states/ca"),
         ("District", "CA-12", "districts/ca-12"),
         ("Office", "S-CA", "offices/s-ca"),
-        ("Cycle", "a1b2c3d4-e5f6-7890-abcd-ef1234567890", "cycles/a1b2c3d4-e5f6-7890-abcd-ef1234567890"),
+        ("Cycle", "a1b2c3d4-e5f6-7890-abcd-ef1234567890", "elections/a1b2c3d4-e5f6-7890-abcd-ef1234567890"),
         ("County", "06037", "counties/06037"),
         ("Place", "0644000", "places/0644000"),
         ("PostalCode", "90210", "postalcodes/90210"),

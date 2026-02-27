@@ -9,10 +9,11 @@
     "State":      { "plural": "states" },
     "District":   { "plural": "districts" },
     "Office":     { "plural": "offices" },
-    "Cycle":      { "plural": "cycles" },
+    "Cycle":      { "plural": "elections" },
     "County":     { "plural": "counties" },
     "Place":      { "plural": "places" },
     "PostalCode": { "plural": "postalcodes" },
-    "Precinct":   { "plural": "precincts" }
+    "Precinct":   { "plural": "precincts" },
+    "Block":      { "plural": "blocks" }
   }
 }
