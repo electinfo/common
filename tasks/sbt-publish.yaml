@@ -59,7 +59,7 @@ spec:
 
         # Override publishTo with internal cluster URL (bypasses Traefik/TLS)
         cat > publish-override.sbt << SEOF
-        publishTo := Some("Nexus" at "$REPO_URL")
+        publishTo := Some(("Nexus" at "$REPO_URL").withAllowInsecureProtocol(true))
         SEOF
 
         echo "Credentials configured for internal Nexus"
