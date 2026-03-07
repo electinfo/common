@@ -34,25 +34,36 @@ spec:
         echo "=== Publishing to Nexus ==="
         echo "Working directory: $(pwd)"
 
-        # Create SBT credentials file
+        # Determine snapshot vs release repo from version
+        VERSION=$(grep -m1 'version :=' build.sbt | sed 's/.*"\(.*\)".*/\1/')
+        ORG=$(grep -m1 'organization :=' build.sbt | sed 's/.*"\(.*\)".*/\1/')
+        NAME=$(grep -m1 'name :=' build.sbt | sed 's/.*"\(.*\)".*/\1/')
+
+        NEXUS_INTERNAL="http://nexus-nexus-repository-manager.nexus.svc.cluster.local:8081/repository"
+        if echo "$VERSION" | grep -q SNAPSHOT; then
+          REPO_URL="${NEXUS_INTERNAL}/maven-snapshots/"
+        else
+          REPO_URL="${NEXUS_INTERNAL}/maven-releases/"
+        fi
+
+        # Create SBT credentials for internal Nexus URL
         mkdir -p ~/.sbt/1.0
         cat > ~/.sbt/1.0/credentials.sbt << EOF
         credentials += Credentials(
           "Sonatype Nexus Repository Manager",
-          "repo.elect.info",
+          "nexus-nexus-repository-manager.nexus.svc.cluster.local",
           "$NEXUS_USER",
           "$NEXUS_PASSWORD"
         )
         EOF
 
-        echo "Credentials configured for repo.elect.info"
+        # Override publishTo with internal cluster URL (bypasses Traefik/TLS)
+        cat > publish-override.sbt << SEOF
+        publishTo := Some("Nexus" at "$REPO_URL")
+        SEOF
 
-        # Extract version info before publishing
-        VERSION=$(grep -m1 'version :=' build.sbt | sed 's/.*"\(.*\)".*/\1/')
-        ORG=$(grep -m1 'organization :=' build.sbt | sed 's/.*"\(.*\)".*/\1/')
-        NAME=$(grep -m1 'name :=' build.sbt | sed 's/.*"\(.*\)".*/\1/')
-
-        echo "Publishing: $ORG:$NAME:$VERSION"
+        echo "Credentials configured for internal Nexus"
+        echo "Publishing: $ORG:$NAME:$VERSION -> $REPO_URL"
 
         # Run sbt publish
         sbt publish
