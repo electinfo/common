@@ -14,6 +14,7 @@
     "Place":      { "plural": "places" },
     "PostalCode": { "plural": "postalcodes" },
     "Precinct":   { "plural": "precincts" },
+    "Tract":      { "plural": "tracts" },
     "Block":      { "plural": "blocks" }
   }
 }
