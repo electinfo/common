@@ -17,3 +17,4 @@ class Constants:
     committee_type_slugs: dict[str, str] = _raw["committeeTypeSlugs"]
     committee_type_names: dict[str, str] = _raw["committeeTypeNames"]
     incumbent_status: dict[str, str] = _raw["incumbentStatus"]
+    disbursement_categories: dict[str, str] = _raw["disbursementCategories"]

@@ -63,7 +63,8 @@ export const Constants = {
   officeNames: constants.officeNames as Record<string, string>,
   committeeTypeSlugs: constants.committeeTypeSlugs as Record<string, string>,
   committeeTypeNames: constants.committeeTypeNames as Record<string, string>,
-  incumbentStatus: constants.incumbentStatus as Record<string, string>
+  incumbentStatus: constants.incumbentStatus as Record<string, string>,
+  disbursementCategories: constants.disbursementCategories as Record<string, string>
 };
 
 // Slug generation (matches Python/Scala implementations)

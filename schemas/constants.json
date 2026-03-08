@@ -131,5 +131,27 @@
     "I": "Incumbent",
     "C": "Challenger",
     "O": "Open Seat"
+  },
+
+  "disbursementCategories": {
+    "001": "Administrative/Salary/Overhead",
+    "002": "Travel",
+    "003": "Solicitation & Fundraising",
+    "004": "Advertising",
+    "005": "Polling",
+    "006": "Campaign Materials",
+    "007": "Campaign Events",
+    "008": "Transfers",
+    "009": "Loan Repayments",
+    "010": "Contribution Refunds",
+    "011": "Political Contributions",
+    "012": "Donations",
+    "101": "General Expenses",
+    "102": "Media",
+    "103": "Mailings & Materials",
+    "104": "State Office Overhead",
+    "105": "Telephone Programs",
+    "106": "Public Opinion Polls",
+    "107": "Fundraising"
   }
 }
