@@ -97,7 +97,11 @@
     "W": "hybrid-pac",
     "X": "party",
     "Y": "party-qualified",
-    "Z": "national-party"
+    "Z": "national-party",
+    "GPAC": "general-purpose-pac",
+    "SPAC": "specific-purpose-pac",
+    "JSPAC": "judicial-specific-purpose-pac",
+    "MPAC": "monthly-filing-pac"
   },
 
   "committeeTypeNames": {
@@ -116,7 +120,11 @@
     "W": "PAC with Non-Contribution Account - Qualified",
     "X": "Party - Nonqualified",
     "Y": "Party - Qualified",
-    "Z": "National Party Nonfederal Account"
+    "Z": "National Party Nonfederal Account",
+    "GPAC": "General Purpose PAC",
+    "SPAC": "Specific Purpose PAC",
+    "JSPAC": "Judicial Specific Purpose PAC",
+    "MPAC": "Monthly Filing PAC"
   },
 
   "incumbentStatus": {
