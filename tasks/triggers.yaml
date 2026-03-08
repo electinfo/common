@@ -65,6 +65,13 @@ metadata:
   name: common-listener
   namespace: tekton-pipelines
 spec:
+  resources:
+    kubernetesResource:
+      spec:
+        template:
+          spec:
+            nodeSelector:
+              kubernetes.io/hostname: magnum
   serviceAccountName: common-trigger-sa
   triggers:
     - name: common-push
