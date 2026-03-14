@@ -1,0 +1,334 @@
+{
+  "seethemoney.az.gov": {
+    "catalog": "az_sos",
+    "entities": [
+      "Candidate",
+      "Committee",
+      "Office"
+    ],
+    "edges": [
+      {
+        "relationship": "SEEKS",
+        "src_type": "Candidate",
+        "dst_type": "Office"
+      }
+    ]
+  },
+  "census.gov": {
+    "catalog": "census",
+    "entities": [
+      "County",
+      "District",
+      "Place",
+      "PostalCode",
+      "State",
+      "Tract"
+    ],
+    "edges": [
+      {
+        "relationship": "LOCATED_IN",
+        "src_type": "County",
+        "dst_type": "State"
+      },
+      {
+        "relationship": "OVERLAPS",
+        "src_type": "District",
+        "dst_type": "County"
+      },
+      {
+        "relationship": "OVERLAPS",
+        "src_type": "District",
+        "dst_type": "Place"
+      },
+      {
+        "relationship": "PART_OF",
+        "src_type": "District",
+        "dst_type": "State"
+      },
+      {
+        "relationship": "LOCATED_IN",
+        "src_type": "Place",
+        "dst_type": "State"
+      },
+      {
+        "relationship": "LOCATED_IN",
+        "src_type": "PostalCode",
+        "dst_type": "District"
+      },
+      {
+        "relationship": "IN_COUNTY",
+        "src_type": "Tract",
+        "dst_type": "County"
+      },
+      {
+        "relationship": "IN_DISTRICT",
+        "src_type": "Tract",
+        "dst_type": "District"
+      },
+      {
+        "relationship": "LOCATED_IN",
+        "src_type": "Tract",
+        "dst_type": "State"
+      }
+    ]
+  },
+  "civitech.io": {
+    "catalog": "civitech",
+    "entities": [
+      "Voter"
+    ],
+    "edges": [
+      {
+        "relationship": "REGISTERED_IN",
+        "src_type": "Voter",
+        "dst_type": "Office"
+      },
+      {
+        "relationship": "AFFILIATED_WITH",
+        "src_type": "Voter",
+        "dst_type": "Party"
+      },
+      {
+        "relationship": "REGISTERED_IN",
+        "src_type": "Voter",
+        "dst_type": "State"
+      }
+    ]
+  },
+  "congress.gov": {
+    "catalog": "congress_gov",
+    "entities": [
+      "OfficeHolder"
+    ],
+    "edges": [
+      {
+        "relationship": "HELD_OFFICE",
+        "src_type": "OfficeHolder",
+        "dst_type": "Office"
+      }
+    ]
+  },
+  "fec.gov": {
+    "catalog": "fec_bulk",
+    "entities": [
+      "Candidate",
+      "Committee",
+      "Cycle",
+      "Employer",
+      "Individual",
+      "Office",
+      "Party",
+      "Vendor"
+    ],
+    "edges": [
+      {
+        "relationship": "PARTICIPATED_IN",
+        "src_type": "Candidate",
+        "dst_type": "Cycle"
+      },
+      {
+        "relationship": "SEEKS",
+        "src_type": "Candidate",
+        "dst_type": "Office"
+      },
+      {
+        "relationship": "ACTIVE_IN",
+        "src_type": "Committee",
+        "dst_type": "Cycle"
+      }
+    ]
+  },
+  "dos.fl.gov": {
+    "catalog": "fl_doe",
+    "entities": [
+      "Candidate",
+      "Committee"
+    ],
+    "edges": []
+  },
+  "ethics.ga.gov": {
+    "catalog": "ga_tcfc",
+    "entities": [
+      "Candidate",
+      "Committee",
+      "Individual",
+      "Office"
+    ],
+    "edges": [
+      {
+        "relationship": "SEEKS",
+        "src_type": "Candidate",
+        "dst_type": "Office"
+      },
+      {
+        "relationship": "CONTRIBUTED_TO",
+        "src_type": "Individual",
+        "dst_type": "Committee"
+      }
+    ]
+  },
+  "maine.gov": {
+    "catalog": "me_ethics",
+    "entities": [
+      "Candidate",
+      "Committee",
+      "Office"
+    ],
+    "edges": [
+      {
+        "relationship": "SEEKS",
+        "src_type": "Candidate",
+        "dst_type": "Office"
+      }
+    ]
+  },
+  "cfb.mn.gov": {
+    "catalog": "mn_cfb",
+    "entities": [
+      "Candidate",
+      "Committee",
+      "Employer",
+      "Individual",
+      "Office",
+      "Vendor"
+    ],
+    "edges": [
+      {
+        "relationship": "SEEKS",
+        "src_type": "Candidate",
+        "dst_type": "Office"
+      }
+    ]
+  },
+  "cf.ncsbe.gov": {
+    "catalog": "nc_sbe",
+    "entities": [
+      "Candidate",
+      "Committee",
+      "Individual",
+      "Office"
+    ],
+    "edges": [
+      {
+        "relationship": "SEEKS",
+        "src_type": "Candidate",
+        "dst_type": "Office"
+      },
+      {
+        "relationship": "CONTRIBUTED_TO",
+        "src_type": "Individual",
+        "dst_type": "Committee"
+      }
+    ]
+  },
+  "nvsos.gov": {
+    "catalog": "nv_sos",
+    "entities": [
+      "Candidate",
+      "Committee"
+    ],
+    "edges": []
+  },
+  "ohiosos.gov": {
+    "catalog": "oh_sos",
+    "entities": [
+      "Candidate",
+      "Committee",
+      "Individual",
+      "Office"
+    ],
+    "edges": [
+      {
+        "relationship": "SEEKS",
+        "src_type": "Candidate",
+        "dst_type": "Office"
+      }
+    ]
+  },
+  "pa.gov": {
+    "catalog": "pa_dos",
+    "entities": [
+      "Candidate",
+      "Committee",
+      "Individual",
+      "Office"
+    ],
+    "edges": [
+      {
+        "relationship": "SEEKS",
+        "src_type": "Candidate",
+        "dst_type": "Office"
+      },
+      {
+        "relationship": "CONTRIBUTED_TO",
+        "src_type": "Individual",
+        "dst_type": "Committee"
+      }
+    ]
+  },
+  "redistrictingdatahub.org": {
+    "catalog": "rdh",
+    "entities": [
+      "Block",
+      "Precinct"
+    ],
+    "edges": []
+  },
+  "ethics.state.tx.us": {
+    "catalog": "tec",
+    "entities": [
+      "Candidate",
+      "Committee",
+      "Individual",
+      "Vendor"
+    ],
+    "edges": []
+  },
+  "cfreports.elections.virginia.gov": {
+    "catalog": "va_doe",
+    "entities": [
+      "Candidate",
+      "Committee"
+    ],
+    "edges": []
+  },
+  "pdc.wa.gov": {
+    "catalog": "wa_pdc",
+    "entities": [
+      "Candidate",
+      "Committee",
+      "Individual",
+      "Office"
+    ],
+    "edges": [
+      {
+        "relationship": "SEEKS",
+        "src_type": "Candidate",
+        "dst_type": "Office"
+      },
+      {
+        "relationship": "CONTRIBUTED_TO",
+        "src_type": "Individual",
+        "dst_type": "Committee"
+      }
+    ]
+  },
+  "cfis.wi.gov": {
+    "catalog": "wi_cfis",
+    "entities": [
+      "Candidate",
+      "Committee",
+      "Employer",
+      "Individual",
+      "Office",
+      "Vendor"
+    ],
+    "edges": [
+      {
+        "relationship": "SEEKS",
+        "src_type": "Candidate",
+        "dst_type": "Office"
+      }
+    ]
+  }
+}
