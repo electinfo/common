@@ -98,13 +98,41 @@
   "congress.gov": {
     "catalog": "congress_gov",
     "entities": [
-      "OfficeHolder"
+      "Candidate",
+      "Office",
+      "OfficeHolder",
+      "Race"
     ],
     "edges": [
       {
-        "relationship": "HELD_OFFICE",
-        "src_type": "OfficeHolder",
+        "relationship": "SEEKS",
+        "src_type": "Candidate",
         "dst_type": "Office"
+      },
+      {
+        "relationship": "COMPETED_IN",
+        "src_type": "Candidate",
+        "dst_type": "Race"
+      },
+      {
+        "relationship": "WON",
+        "src_type": "OfficeHolder",
+        "dst_type": "Race"
+      },
+      {
+        "relationship": "PART_OF",
+        "src_type": "Race",
+        "dst_type": "Cycle"
+      },
+      {
+        "relationship": "FOR_OFFICE",
+        "src_type": "Race",
+        "dst_type": "Office"
+      },
+      {
+        "relationship": "HELD_IN",
+        "src_type": "Race",
+        "dst_type": "State"
       }
     ]
   },
