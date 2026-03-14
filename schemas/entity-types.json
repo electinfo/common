@@ -10,11 +10,13 @@
     "District":   { "plural": "districts" },
     "Office":     { "plural": "offices" },
     "Cycle":      { "plural": "elections" },
+    "DataSource": { "plural": "datasources" },
     "County":     { "plural": "counties" },
     "Place":      { "plural": "places" },
     "PostalCode": { "plural": "postalcodes" },
     "Precinct":   { "plural": "precincts" },
     "Tract":      { "plural": "tracts" },
-    "Block":      { "plural": "blocks" }
+    "Block":      { "plural": "blocks" },
+    "OfficeHolder": { "plural": "officeholders" }
   }
 }

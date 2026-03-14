@@ -77,6 +77,11 @@
     "cycle": {
       "type": "string",
       "pattern": "/elections/{year}/"
+    },
+    "dataSource": {
+      "type": "string",
+      "pattern": "/datasources/{id}/",
+      "description": "id = domain name (e.g., 'fec.gov')"
     }
   }
 }
