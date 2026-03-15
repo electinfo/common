@@ -1,0 +1,235 @@
+# Political Office Code Mappings
+# Canonical office type abbreviations used across the electinfo platform.
+#
+# Used by:
+#   - Quicksilver layers to normalize office values from source data
+#   - Gold layer to generate office_key and office_name
+#   - Office entity resolution (UUID5 keys match on canonical code)
+#   - Frontend display (code → name lookups)
+#
+# Office key format: {code} | {code}-{state} | {code}-{state}-{district}
+#   Examples: P, S-CA, H-CA-12, GOV-TX, SS-WA-43
+
+# --- Federal offices ---
+# FEC standard single-letter codes
+federal:
+  P:
+    name: "President of the United States"
+    level: federal
+    branch: executive
+    has_state: false
+    has_district: false
+  S:
+    name: "U.S. Senator"
+    level: federal
+    branch: legislative
+    has_state: true
+    has_district: false
+  H:
+    name: "U.S. Representative"
+    level: federal
+    branch: legislative
+    has_state: true
+    has_district: true
+
+# --- State executive offices ---
+state_executive:
+  GOV:
+    name: "Governor"
+    level: state
+    branch: executive
+    has_district: false
+  LTGOV:
+    name: "Lieutenant Governor"
+    level: state
+    branch: executive
+    has_district: false
+  AG:
+    name: "Attorney General"
+    level: state
+    branch: executive
+    has_district: false
+  SOS:
+    name: "Secretary of State"
+    level: state
+    branch: executive
+    has_district: false
+  TREAS:
+    name: "State Treasurer"
+    level: state
+    branch: executive
+    has_district: false
+  AUD:
+    name: "State Auditor"
+    level: state
+    branch: executive
+    has_district: false
+  COMP:
+    name: "Comptroller"
+    level: state
+    branch: executive
+    has_district: false
+  SPI:
+    name: "Superintendent of Public Instruction"
+    level: state
+    branch: executive
+    has_district: false
+  PLC:
+    name: "Commissioner of Public Lands"
+    level: state
+    branch: executive
+    has_district: false
+  IC:
+    name: "Insurance Commissioner"
+    level: state
+    branch: executive
+    has_district: false
+  AGCOM:
+    name: "Commissioner of Agriculture"
+    level: state
+    branch: executive
+    has_district: false
+  INSCOM:
+    name: "Commissioner of Insurance"
+    level: state
+    branch: executive
+    has_district: false
+  LABCOM:
+    name: "Commissioner of Labor"
+    level: state
+    branch: executive
+    has_district: false
+
+# --- State legislative offices ---
+state_legislative:
+  SS:
+    name: "State Senator"
+    level: state
+    branch: legislative
+    has_district: true
+  SR:
+    name: "State Representative"
+    level: state
+    branch: legislative
+    has_district: true
+
+# --- Local offices ---
+local:
+  SHER:
+    name: "Sheriff"
+    level: local
+    branch: executive
+    has_district: false
+  DA:
+    name: "District Attorney"
+    level: local
+    branch: executive
+    has_district: false
+  CC:
+    name: "County Commissioner"
+    level: local
+    branch: legislative
+    has_district: false
+  RP:
+    name: "Register of Probate"
+    level: local
+    branch: executive
+    has_district: false
+  RD:
+    name: "Register of Deeds"
+    level: local
+    branch: executive
+    has_district: false
+
+# --- Alias mappings → canonical code ---
+# Maps variant abbreviations and full office names to canonical codes.
+# All alias keys are UPPER-CASED for case-insensitive matching.
+# Pipeline code should UPPER(TRIM(value)) before lookup.
+aliases:
+  # --- Federal aliases ---
+  PRESIDENT: P
+  PRESIDENT OF THE UNITED STATES: P
+  US PRESIDENT: P
+  U.S. PRESIDENT: P
+
+  SENATE: S
+  US SENATE: S
+  U.S. SENATE: S
+  US SENATOR: S
+  U.S. SENATOR: S
+  UNITED STATES SENATOR: S
+  UNITED STATES SENATE: S
+
+  HOUSE: H
+  US HOUSE: H
+  U.S. HOUSE: H
+  US REPRESENTATIVE: H
+  U.S. REPRESENTATIVE: H
+  UNITED STATES REPRESENTATIVE: H
+  REPRESENTATIVE IN CONGRESS: H
+  US CONGRESS: H
+  U.S. CONGRESS: H
+
+  # --- PA DOS abbreviations ---
+  USC: H         # PA DOS "US Congress" — disambiguated by district presence
+  LTG: LTGOV     # PA DOS Lieutenant Governor
+  ATT: AG        # PA DOS Attorney General
+  TRS: TREAS     # PA DOS Treasurer
+  STH: SR        # PA DOS State House
+  STS: SS        # PA DOS State Senate
+
+  # --- OpenElections / general aliases ---
+  SH: SR         # OpenElections "State House"
+
+  # --- Full name → code (Governor variants) ---
+  GOVERNOR: GOV
+  LIEUTENANT GOVERNOR: LTGOV
+  LT. GOVERNOR: LTGOV
+  LT GOVERNOR: LTGOV
+
+  # --- Full name → code (Attorney General) ---
+  ATTORNEY GENERAL: AG
+
+  # --- Full name → code (Secretary of State) ---
+  SECRETARY OF STATE: SOS
+
+  # --- Full name → code (Treasurer variants) ---
+  TREASURER: TREAS
+  STATE TREASURER: TREAS
+
+  # --- Full name → code (Auditor variants) ---
+  AUDITOR: AUD
+  STATE AUDITOR: AUD
+
+  # --- Full name → code (Comptroller) ---
+  COMPTROLLER: COMP
+
+  # --- Full name → code (Education) ---
+  SUPERINTENDENT OF PUBLIC INSTRUCTION: SPI
+
+  # --- Full name → code (Commissioners) ---
+  COMMISSIONER OF PUBLIC LANDS: PLC
+  PUBLIC LANDS COMMISSIONER: PLC
+  INSURANCE COMMISSIONER: IC
+  COMMISSIONER OF AGRICULTURE: AGCOM
+  COMMISSIONER OF INSURANCE: INSCOM
+  COMMISSIONER OF LABOR: LABCOM
+
+  # --- Full name → code (State legislative) ---
+  STATE SENATOR: SS
+  STATE SENATE: SS
+  SENATOR: SS
+
+  STATE REPRESENTATIVE: SR
+  STATE HOUSE: SR
+  REPRESENTATIVE: SR
+  STATE ASSEMBLY: SR
+  ASSEMBLY: SR
+  HOUSE OF DELEGATES: SR
+
+  # --- Full name → code (Local) ---
+  SHERIFF: SHER
+  DISTRICT ATTORNEY: DA
+  COUNTY COMMISSIONER: CC
+  REGISTER OF PROBATE: RP
+  REGISTER OF DEEDS: RD

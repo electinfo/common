@@ -1,8 +1,10 @@
-"""Load JSON schemas bundled with the package."""
+"""Load JSON and YAML schemas bundled with the package."""
 
 import json
 from importlib import resources
 from pathlib import Path
+
+import yaml
 
 
 def _find_repo_schemas() -> Path:
@@ -26,6 +28,19 @@ def _load_schema(name: str) -> dict:
     return json.loads((_find_repo_schemas() / name).read_text(encoding="utf-8"))
 
 
+def _load_yaml(name: str) -> dict:
+    # In a built wheel, schemas are bundled inside the package
+    pkg_schemas = resources.files("electinfo_common") / "schemas" / name
+    if pkg_schemas.is_file():
+        return yaml.safe_load(pkg_schemas.read_text(encoding="utf-8"))
+
+    # In an editable install, walk up to find the repo-level schemas/
+    return yaml.safe_load((_find_repo_schemas() / name).read_text(encoding="utf-8"))
+
+
 url_patterns: dict = _load_schema("url-patterns.json")
 constants: dict = _load_schema("constants.json")
 entity_types: dict = _load_schema("entity-types.json")
+party_codes: dict = _load_yaml("party-codes.yaml")
+state_codes: dict = _load_yaml("state-codes.yaml")
+office_codes: dict = _load_yaml("office-codes.yaml")

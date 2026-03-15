@@ -5,9 +5,12 @@
 import urlPatterns from '../../../schemas/url-patterns.json';
 import constants from '../../../schemas/constants.json';
 import entityTypesSchema from '../../../schemas/entity-types.json';
+import partyCodesSchema from '../../../schemas/party-codes.json';
+import stateCodesSchema from '../../../schemas/state-codes.json';
+import officeCodesSchema from '../../../schemas/office-codes.json';
 
 // Re-export raw schemas
-export { urlPatterns, constants, entityTypesSchema };
+export { urlPatterns, constants, entityTypesSchema, partyCodesSchema, stateCodesSchema, officeCodesSchema };
 
 // Type definitions
 export interface UrlPatternConfig {
@@ -155,6 +158,77 @@ export const gdeltTypeDefs = `
     hasMore: Boolean!
   }
 `;
+
+// Party code mappings and normalization
+const _partyCodes = partyCodesSchema.codes as Record<string, string>;
+const _partyAliases = partyCodesSchema.aliases as Record<string, string>;
+
+export const PartyCode = {
+  codes: _partyCodes,
+  aliases: _partyAliases,
+  normalize(value: string | null | undefined): string | null {
+    if (!value) return null;
+    const key = value.trim().toUpperCase();
+    if (key in _partyCodes) return key;
+    return _partyAliases[key] || null;
+  }
+};
+
+// State code mappings and normalization
+const _stateData = stateCodesSchema.states as Record<string, { fips: string; name: string; house_seats: number }>;
+const _territoryData = stateCodesSchema.territories as Record<string, { fips: string; name: string; house_seats: number }>;
+const _stateAliases = stateCodesSchema.aliases as Record<string, string>;
+const _allStates = { ..._stateData, ..._territoryData };
+const _fipsToCode: Record<string, string> = {};
+for (const [code, info] of Object.entries(_allStates)) {
+  _fipsToCode[info.fips] = code;
+}
+
+export const StateCode = {
+  states: _stateData,
+  territories: _territoryData,
+  special: (stateCodesSchema.special || {}) as Record<string, { name: string }>,
+  aliases: _stateAliases,
+  names: {
+    ...Object.fromEntries(Object.entries(_allStates).map(([k, v]) => [k, v.name])),
+    ...Object.fromEntries(Object.entries((stateCodesSchema.special || {}) as Record<string, { name: string }>).map(([k, v]) => [k, v.name])),
+  } as Record<string, string>,
+  fipsToCode: _fipsToCode,
+  houseSeats: Object.fromEntries(Object.entries(_allStates).map(([k, v]) => [k, v.house_seats])) as Record<string, number>,
+  normalize(value: string | null | undefined): string | null {
+    if (!value) return null;
+    const key = value.trim().toUpperCase();
+    if (key in _allStates || key in ((stateCodesSchema.special || {}) as Record<string, unknown>)) return key;
+    if (key in _stateAliases) return _stateAliases[key];
+    const fipsKey = key.length === 1 ? '0' + key : key;
+    if (fipsKey in _fipsToCode) return _fipsToCode[fipsKey];
+    return null;
+  }
+};
+
+// Office code mappings and normalization
+const _federal = officeCodesSchema.federal as Record<string, { name: string }>;
+const _stateExec = officeCodesSchema.state_executive as Record<string, { name: string }>;
+const _stateLeg = officeCodesSchema.state_legislative as Record<string, { name: string }>;
+const _local = officeCodesSchema.local as Record<string, { name: string }>;
+const _allOffices = { ..._federal, ..._stateExec, ..._stateLeg, ..._local };
+const _officeAliases = officeCodesSchema.aliases as Record<string, string>;
+
+export const OfficeCode = {
+  federal: _federal,
+  stateExecutive: _stateExec,
+  stateLegislative: _stateLeg,
+  local: _local,
+  codes: _allOffices,
+  aliases: _officeAliases,
+  names: Object.fromEntries(Object.entries(_allOffices).map(([k, v]) => [k, v.name])) as Record<string, string>,
+  normalize(value: string | null | undefined): string | null {
+    if (!value) return null;
+    const key = value.trim().toUpperCase();
+    if (key in _allOffices) return key;
+    return _officeAliases[key] || null;
+  }
+};
 
 // Entity type registry
 const entityTypes = entityTypesSchema.entityTypes as Record<string, { plural: string }>;

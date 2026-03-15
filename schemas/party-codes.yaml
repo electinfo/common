@@ -1,0 +1,189 @@
+# Party Code Mappings
+# Canonical party codes from the FEC Party Code Descriptions
+# Reference: https://www.fec.gov/campaign-finance-data/party-code-descriptions/
+#
+# Used by:
+#   - Pipeline quicksilver/gold layers to normalize party values
+#   - Party entity resolution (UUID5 keys match on canonical code)
+#   - Frontend display (code → name lookups)
+
+# --- Canonical FEC party codes → full names ---
+codes:
+  ACE: "Ace Party"
+  AKI: "Alaskan Independence Party"
+  AIC: "American Independent Conservative"
+  AIP: "American Independent Party"
+  AMP: "American Party"
+  APF: "American People's Freedom Party"
+  CIT: "Citizens' Party"
+  CMD: "Commandments Party"
+  CMP: "Commonwealth Party of the U.S."
+  COM: "Communist Party"
+  CON: "Constitution Party"
+  CRV: "Conservative Party"
+  CST: "Constitutional"
+  DC: "Democratic/Conservative"
+  DEM: "Democratic Party"
+  DFL: "Democratic-Farmer-Labor"
+  DNL: "Democratic-Nonpartisan League"
+  FED: "Federalist"
+  FLP: "Freedom Labor Party"
+  FRE: "Freedom Party"
+  GRE: "Green Party"
+  GWP: "George Wallace Party"
+  HRP: "Human Rights Party"
+  IAP: "Independent American Party"
+  ICD: "Independent Conserv. Democratic"
+  IGD: "Industrial Government Party"
+  IND: "Independent"
+  JAC: "Jackson Party"
+  JCN: "Jewish/Christian National"
+  LAB: "Labor Party"
+  LBL: "Liberal Party"
+  LBR: "Libertarian Party"
+  LBU: "Liberty Union Party"
+  LFT: "Less Federal Taxes"
+  LIB: "Libertarian Party"
+  LRU: "La Raza Unida"
+  NAP: "Prohibition Party"
+  NDP: "National Democratic Party"
+  NEW: "New Party"
+  NLP: "Natural Law Party"
+  NON: "Non-Party"
+  NPA: "No Party Affiliation"
+  OTH: "Other"
+  PAF: "Peace and Freedom"
+  PFD: "Peace and Freedom"
+  PFP: "Peace and Freedom Party"
+  POP: "Populist Party"
+  PPD: "Partido Popular Democr."
+  PPY: "People's Party"
+  PRO: "Progressive Party"
+  REF: "Reform Party"
+  REP: "Republican Party"
+  RES: "Resource Party"
+  RTL: "Right to Life"
+  SOC: "Socialist Party"
+  SUS: "Socialist Party U.S.A."
+  SWP: "Socialist Workers Party"
+  THD: "Theo-Democratic"
+  TWR: "Taxpayers Without Representation"
+  TX: "Taxpayers"
+  USP: "U.S. People's Party"
+  UST: "U.S. Taxpayers Party"
+  UNK: "Unknown"
+  VET: "Veterans Party"
+  WFP: "Working Families Party"
+  WTP: "We the People"
+
+# --- Alias mappings → canonical FEC code ---
+# Maps variant party values (full names, abbreviations, single letters,
+# state-specific terms) to canonical FEC 3-letter codes.
+#
+# All alias keys are UPPER-CASE for case-insensitive matching.
+# Pipeline code should UPPER(TRIM(value)) before lookup.
+#
+# Aliases that are identical to a canonical code (e.g. DEM→DEM) are
+# intentionally omitted — code lookup should check `codes` first,
+# then fall back to `aliases`.
+aliases:
+  # --- Democratic variants ---
+  DEMOCRATIC: DEM
+  DEMOCRAT: DEM
+  DEMOCRATIC PARTY: DEM
+  DEMOCRATIC-FARMER-LABOR: DFL
+  DEM-FARMER-LABOR: DFL
+  D: DEM
+
+  # --- Republican variants ---
+  REPUBLICAN: REP
+  REPUBLICAN PARTY: REP
+  R: REP
+
+  # --- Libertarian variants ---
+  LIBERTARIAN: LIB
+  LIBERTARIAN PARTY: LIB
+  L: LIB
+
+  # --- Green variants ---
+  GREEN: GRE
+  GREEN PARTY: GRE
+  GRN: GRE
+  G: GRE
+
+  # --- Independent / Nonpartisan variants ---
+  INDEPENDENT: IND
+  NO PARTY AFFILIATION: NPA
+  NO PARTY: NPA
+  NON-PARTISAN: NON
+  NONPARTISAN: NON
+  NON PARTISAN: NON
+  NP: NON
+  UNAFFILIATED: NPA
+  UNENROLLED: NPA
+  I: IND
+  N: NON
+
+  # --- Constitution Party variants ---
+  CONSTITUTION: CON
+  CONSTITUTION PARTY: CON
+  CONSTITUTIONAL: CST
+
+  # --- Conservative variants ---
+  CONSERVATIVE: CRV
+  CONSERVATIVE PARTY: CRV
+
+  # --- Reform Party variants ---
+  REFORM: REF
+  REFORM PARTY: REF
+
+  # --- Working Families variants ---
+  WORKING FAMILIES: WFP
+  WORKING FAMILIES PARTY: WFP
+
+  # --- Progressive variants ---
+  PROGRESSIVE: PRO
+  PROGRESSIVE PARTY: PRO
+
+  # --- Write-in / Other ---
+  WRITE-IN: OTH
+  WRITE IN: OTH
+  W: OTH
+  OTHER: OTH
+  UNKNOWN: UNK
+  NONE: NON
+
+  # --- State-specific affiliations ---
+  # Minnesota
+  DEMOCRATIC-FARMER-LABOR PARTY: DFL
+  FARMER-LABOR: DFL
+
+  # New York
+  LIBERAL: LBL
+  LIBERAL PARTY: LBL
+  RIGHT TO LIFE: RTL
+  RIGHT TO LIFE PARTY: RTL
+
+  # Vermont
+  LIBERTY UNION: LBU
+  LIBERTY UNION PARTY: LBU
+
+  # Puerto Rico
+  POPULAR DEMOCRATIC: PPD
+  PARTIDO POPULAR DEMOCRATICO: PPD
+
+  # Alaska
+  ALASKAN INDEPENDENCE: AKI
+  ALASKAN INDEPENDENCE PARTY: AKI
+
+  # Peace and Freedom
+  PEACE AND FREEDOM: PAF
+  PEACE AND FREEDOM PARTY: PFP
+
+  # Socialist variants
+  SOCIALIST: SOC
+  SOCIALIST PARTY: SOC
+
+  # Communist
+  COMMUNIST: COM
+  COMMUNIST PARTY: COM

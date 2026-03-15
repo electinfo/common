@@ -8,6 +8,7 @@ version = "0.2.0"
 description = "Shared schemas, templates, and constants for electinfo"
 license = "MIT"
 requires-python = ">=3.9"
+dependencies = ["pyyaml>=6.0"]
 
 [project.optional-dependencies]
 dev = ["pytest>=7.0"]

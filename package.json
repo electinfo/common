@@ -10,7 +10,8 @@
     "templates"
   ],
   "scripts": {
-    "build": "tsc",
+    "yaml2json": "node scripts/yaml2json.js",
+    "build": "npm run yaml2json && tsc",
     "prepublishOnly": "npm run build"
   },
   "repository": {
@@ -20,6 +21,7 @@
   "author": "electinfo",
   "license": "MIT",
   "devDependencies": {
+    "js-yaml": "^4.1.0",
     "typescript": "^5.0.0"
   }
 }

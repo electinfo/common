@@ -1,6 +1,11 @@
 node_modules/
 dist/
 target/
+
+# Generated from YAML source (npm run yaml2json)
+schemas/party-codes.json
+schemas/state-codes.json
+schemas/office-codes.json
 project/target/
 .bsp/
 .idea/

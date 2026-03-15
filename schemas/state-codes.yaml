@@ -1,0 +1,143 @@
+# US State and Territory Codes
+# Canonical mapping of 2-letter postal codes, FIPS codes, and full names.
+#
+# Used by:
+#   - Pipeline layers for state code ↔ name lookups
+#   - Census FIPS code conversion
+#   - Frontend display
+#   - House apportionment (political representation)
+
+# --- States (50) ---
+# code: 2-letter USPS postal abbreviation
+# fips: 2-digit Census FIPS code
+# name: full state name
+# house_seats: 2020 Census apportionment (US House of Representatives)
+states:
+  AL: { fips: "01", name: "Alabama", house_seats: 7 }
+  AK: { fips: "02", name: "Alaska", house_seats: 1 }
+  AZ: { fips: "04", name: "Arizona", house_seats: 9 }
+  AR: { fips: "05", name: "Arkansas", house_seats: 4 }
+  CA: { fips: "06", name: "California", house_seats: 52 }
+  CO: { fips: "08", name: "Colorado", house_seats: 8 }
+  CT: { fips: "09", name: "Connecticut", house_seats: 5 }
+  DE: { fips: "10", name: "Delaware", house_seats: 1 }
+  FL: { fips: "12", name: "Florida", house_seats: 28 }
+  GA: { fips: "13", name: "Georgia", house_seats: 14 }
+  HI: { fips: "15", name: "Hawaii", house_seats: 2 }
+  ID: { fips: "16", name: "Idaho", house_seats: 2 }
+  IL: { fips: "17", name: "Illinois", house_seats: 17 }
+  IN: { fips: "18", name: "Indiana", house_seats: 9 }
+  IA: { fips: "19", name: "Iowa", house_seats: 4 }
+  KS: { fips: "20", name: "Kansas", house_seats: 4 }
+  KY: { fips: "21", name: "Kentucky", house_seats: 6 }
+  LA: { fips: "22", name: "Louisiana", house_seats: 6 }
+  ME: { fips: "23", name: "Maine", house_seats: 2 }
+  MD: { fips: "24", name: "Maryland", house_seats: 8 }
+  MA: { fips: "25", name: "Massachusetts", house_seats: 9 }
+  MI: { fips: "26", name: "Michigan", house_seats: 13 }
+  MN: { fips: "27", name: "Minnesota", house_seats: 8 }
+  MS: { fips: "28", name: "Mississippi", house_seats: 4 }
+  MO: { fips: "29", name: "Missouri", house_seats: 8 }
+  MT: { fips: "30", name: "Montana", house_seats: 2 }
+  NE: { fips: "31", name: "Nebraska", house_seats: 3 }
+  NV: { fips: "32", name: "Nevada", house_seats: 4 }
+  NH: { fips: "33", name: "New Hampshire", house_seats: 2 }
+  NJ: { fips: "34", name: "New Jersey", house_seats: 12 }
+  NM: { fips: "35", name: "New Mexico", house_seats: 3 }
+  NY: { fips: "36", name: "New York", house_seats: 26 }
+  NC: { fips: "37", name: "North Carolina", house_seats: 14 }
+  ND: { fips: "38", name: "North Dakota", house_seats: 1 }
+  OH: { fips: "39", name: "Ohio", house_seats: 15 }
+  OK: { fips: "40", name: "Oklahoma", house_seats: 5 }
+  OR: { fips: "41", name: "Oregon", house_seats: 6 }
+  PA: { fips: "42", name: "Pennsylvania", house_seats: 17 }
+  RI: { fips: "44", name: "Rhode Island", house_seats: 2 }
+  SC: { fips: "45", name: "South Carolina", house_seats: 7 }
+  SD: { fips: "46", name: "South Dakota", house_seats: 1 }
+  TN: { fips: "47", name: "Tennessee", house_seats: 9 }
+  TX: { fips: "48", name: "Texas", house_seats: 38 }
+  UT: { fips: "49", name: "Utah", house_seats: 4 }
+  VT: { fips: "50", name: "Vermont", house_seats: 1 }
+  VA: { fips: "51", name: "Virginia", house_seats: 11 }
+  WA: { fips: "53", name: "Washington", house_seats: 10 }
+  WV: { fips: "54", name: "West Virginia", house_seats: 2 }
+  WI: { fips: "55", name: "Wisconsin", house_seats: 8 }
+  WY: { fips: "56", name: "Wyoming", house_seats: 1 }
+
+# --- Territories and federal district ---
+# house_seats: 0 (non-voting delegates)
+# senate_seats: 0 (no senators)
+territories:
+  DC: { fips: "11", name: "District of Columbia", house_seats: 0 }
+  PR: { fips: "72", name: "Puerto Rico", house_seats: 0 }
+  GU: { fips: "66", name: "Guam", house_seats: 0 }
+  VI: { fips: "78", name: "Virgin Islands", house_seats: 0 }
+  AS: { fips: "60", name: "American Samoa", house_seats: 0 }
+  MP: { fips: "69", name: "Northern Mariana Islands", house_seats: 0 }
+
+# --- Special pseudo-state ---
+# Used for federal/nationwide entities (e.g. President, national parties)
+special:
+  US: { name: "United States" }
+
+# --- Aliases ---
+# Maps full state names (UPPER-CASED) to 2-letter codes.
+# Pipeline code should UPPER(TRIM(value)) before lookup.
+aliases:
+  ALABAMA: AL
+  ALASKA: AK
+  ARIZONA: AZ
+  ARKANSAS: AR
+  CALIFORNIA: CA
+  COLORADO: CO
+  CONNECTICUT: CT
+  DELAWARE: DE
+  FLORIDA: FL
+  GEORGIA: GA
+  HAWAII: HI
+  IDAHO: ID
+  ILLINOIS: IL
+  INDIANA: IN
+  IOWA: IA
+  KANSAS: KS
+  KENTUCKY: KY
+  LOUISIANA: LA
+  MAINE: ME
+  MARYLAND: MD
+  MASSACHUSETTS: MA
+  MICHIGAN: MI
+  MINNESOTA: MN
+  MISSISSIPPI: MS
+  MISSOURI: MO
+  MONTANA: MT
+  NEBRASKA: NE
+  NEVADA: NV
+  NEW HAMPSHIRE: NH
+  NEW JERSEY: NJ
+  NEW MEXICO: NM
+  NEW YORK: NY
+  NORTH CAROLINA: NC
+  NORTH DAKOTA: ND
+  OHIO: OH
+  OKLAHOMA: OK
+  OREGON: OR
+  PENNSYLVANIA: PA
+  RHODE ISLAND: RI
+  SOUTH CAROLINA: SC
+  SOUTH DAKOTA: SD
+  TENNESSEE: TN
+  TEXAS: TX
+  UTAH: UT
+  VERMONT: VT
+  VIRGINIA: VA
+  WASHINGTON: WA
+  WEST VIRGINIA: WV
+  WISCONSIN: WI
+  WYOMING: WY
+  DISTRICT OF COLUMBIA: DC
+  PUERTO RICO: PR
+  GUAM: GU
+  VIRGIN ISLANDS: VI
+  AMERICAN SAMOA: AS
+  NORTHERN MARIANA ISLANDS: MP
+  UNITED STATES: US
