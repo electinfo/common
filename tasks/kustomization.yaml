@@ -7,5 +7,6 @@ resources:
   - npm-publish.yaml
   - sbt-publish.yaml
   - pypi-publish.yaml
+  - trigger-spark-runner-rebuild.yaml
   - pipeline.yaml
   - triggers.yaml

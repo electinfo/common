@@ -66,6 +66,12 @@ spec:
         - name: source
           workspace: shared-workspace
 
+    - name: rebuild-spark-runner
+      taskRef:
+        name: common-trigger-spark-runner-rebuild
+      runAfter:
+        - pypi-publish
+
   finally:
     - name: report
       taskSpec:

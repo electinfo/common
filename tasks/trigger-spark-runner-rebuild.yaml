@@ -1,0 +1,53 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: common-trigger-spark-runner-rebuild
+  namespace: tekton-pipelines
+spec:
+  description: |
+    Trigger a spark-images-build PipelineRun targeting only spark-runner.
+    Called after pypi-publish to roll out the latest electinfo-common.
+  steps:
+    - name: create-pipelinerun
+      image: bitnami/kubectl:latest
+      script: |
+        #!/bin/sh
+        set -e
+
+        echo "Triggering spark-images-build for spark-runner..."
+
+        cat <<'EOF' | kubectl create -f -
+        apiVersion: tekton.dev/v1
+        kind: PipelineRun
+        metadata:
+          generateName: spark-runner-rebuild-
+          namespace: tekton-pipelines
+          labels:
+            tekton.dev/pipeline: spark-images-build
+            electinfo.io/triggered-by: common-publish
+        spec:
+          pipelineRef:
+            name: spark-images-build
+          taskRunTemplate:
+            serviceAccountName: spark-images-build-sa
+          params:
+            - name: git-revision
+              value: main
+            - name: registry
+              value: registry.container-registry.svc.cluster.local:5000
+            - name: tag
+              value: latest
+            - name: targets
+              value: spark-runner
+          workspaces:
+            - name: shared-workspace
+              volumeClaimTemplate:
+                spec:
+                  accessModes:
+                    - ReadWriteOnce
+                  resources:
+                    requests:
+                      storage: 2Gi
+        EOF
+
+        echo "PipelineRun created. spark-runner rebuild is in progress."
