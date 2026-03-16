@@ -182,9 +182,22 @@
     "catalog": "fl_doe",
     "entities": [
       "Candidate",
-      "Committee"
+      "Committee",
+      "Individual",
+      "Vendor"
     ],
-    "edges": []
+    "edges": [
+      {
+        "relationship": "PAYS",
+        "src_type": null,
+        "dst_type": "Vendor"
+      },
+      {
+        "relationship": "CONTRIBUTED_TO",
+        "src_type": "Individual",
+        "dst_type": null
+      }
+    ]
   },
   "ethics.ga.gov": {
     "catalog": "ga_tcfc",
