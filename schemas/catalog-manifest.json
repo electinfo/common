@@ -4,13 +4,25 @@
     "entities": [
       "Candidate",
       "Committee",
-      "Office"
+      "Individual",
+      "Office",
+      "Vendor"
     ],
     "edges": [
       {
         "relationship": "SEEKS",
         "src_type": "Candidate",
         "dst_type": "Office"
+      },
+      {
+        "relationship": "PAYS",
+        "src_type": "Committee",
+        "dst_type": "Vendor"
+      },
+      {
+        "relationship": "CONTRIBUTED_TO",
+        "src_type": "Individual",
+        "dst_type": "Committee"
       }
     ]
   },
