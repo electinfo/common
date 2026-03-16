@@ -316,7 +316,9 @@
     "catalog": "va_doe",
     "entities": [
       "Candidate",
-      "Committee"
+      "Committee",
+      "Individual",
+      "Vendor"
     ],
     "edges": []
   },
