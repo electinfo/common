@@ -253,7 +253,9 @@
     "catalog": "nv_sos",
     "entities": [
       "Candidate",
-      "Committee"
+      "Committee",
+      "Individual",
+      "Vendor"
     ],
     "edges": []
   },
