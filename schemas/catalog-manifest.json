@@ -15,6 +15,11 @@
         "dst_type": "Office"
       },
       {
+        "relationship": "AFFILIATED_WITH",
+        "src_type": "Candidate",
+        "dst_type": "Party"
+      },
+      {
         "relationship": "PAYS",
         "src_type": "Committee",
         "dst_type": "Vendor"
@@ -122,6 +127,11 @@
         "dst_type": "Office"
       },
       {
+        "relationship": "AFFILIATED_WITH",
+        "src_type": "Candidate",
+        "dst_type": "Party"
+      },
+      {
         "relationship": "COMPETED_IN",
         "src_type": "Candidate",
         "dst_type": "Race"
@@ -172,6 +182,11 @@
         "dst_type": "Office"
       },
       {
+        "relationship": "AFFILIATED_WITH",
+        "src_type": "Candidate",
+        "dst_type": "Party"
+      },
+      {
         "relationship": "ACTIVE_IN",
         "src_type": "Committee",
         "dst_type": "Cycle"
@@ -187,6 +202,11 @@
       "Vendor"
     ],
     "edges": [
+      {
+        "relationship": "AFFILIATED_WITH",
+        "src_type": "Candidate",
+        "dst_type": "Party"
+      },
       {
         "relationship": "PAYS",
         "src_type": null,
@@ -215,6 +235,11 @@
         "dst_type": "Office"
       },
       {
+        "relationship": "AFFILIATED_WITH",
+        "src_type": "Candidate",
+        "dst_type": "Party"
+      },
+      {
         "relationship": "PAYS",
         "src_type": "Committee",
         "dst_type": "Vendor"
@@ -240,6 +265,11 @@
         "relationship": "SEEKS",
         "src_type": "Candidate",
         "dst_type": "Office"
+      },
+      {
+        "relationship": "AFFILIATED_WITH",
+        "src_type": "Candidate",
+        "dst_type": "Party"
       }
     ]
   },
@@ -276,6 +306,11 @@
         "dst_type": "Office"
       },
       {
+        "relationship": "AFFILIATED_WITH",
+        "src_type": "Candidate",
+        "dst_type": "Party"
+      },
+      {
         "relationship": "CONTRIBUTED_TO",
         "src_type": "Individual",
         "dst_type": "Committee"
@@ -290,7 +325,13 @@
       "Individual",
       "Vendor"
     ],
-    "edges": []
+    "edges": [
+      {
+        "relationship": "AFFILIATED_WITH",
+        "src_type": "Candidate",
+        "dst_type": "Party"
+      }
+    ]
   },
   "ohiosos.gov": {
     "catalog": "oh_sos",
@@ -306,6 +347,11 @@
         "relationship": "SEEKS",
         "src_type": "Candidate",
         "dst_type": "Office"
+      },
+      {
+        "relationship": "AFFILIATED_WITH",
+        "src_type": "Candidate",
+        "dst_type": "Party"
       },
       {
         "relationship": "PAYS",
@@ -333,6 +379,11 @@
         "relationship": "SEEKS",
         "src_type": "Candidate",
         "dst_type": "Office"
+      },
+      {
+        "relationship": "AFFILIATED_WITH",
+        "src_type": "Candidate",
+        "dst_type": "Party"
       },
       {
         "relationship": "PAYS",
@@ -383,7 +434,13 @@
       "Individual",
       "Vendor"
     ],
-    "edges": []
+    "edges": [
+      {
+        "relationship": "AFFILIATED_WITH",
+        "src_type": "Candidate",
+        "dst_type": "Party"
+      }
+    ]
   },
   "pdc.wa.gov": {
     "catalog": "wa_pdc",
@@ -399,6 +456,11 @@
         "relationship": "SEEKS",
         "src_type": "Candidate",
         "dst_type": "Office"
+      },
+      {
+        "relationship": "AFFILIATED_WITH",
+        "src_type": "Candidate",
+        "dst_type": "Party"
       },
       {
         "relationship": "PAYS",
@@ -427,6 +489,11 @@
         "relationship": "SEEKS",
         "src_type": "Candidate",
         "dst_type": "Office"
+      },
+      {
+        "relationship": "AFFILIATED_WITH",
+        "src_type": "Candidate",
+        "dst_type": "Party"
       }
     ]
   }
