@@ -496,31 +496,5 @@
         "dst_type": "Party"
       }
     ]
-  },
-  "elect.info": {
-    "catalog": "catalogs",
-    "entities": [
-      "Catalog",
-      "DataSource",
-      "Field",
-      "Table"
-    ],
-    "edges": [
-      {
-        "relationship": "PROVIDED_BY",
-        "src_type": "DataSource",
-        "dst_type": "Catalog"
-      },
-      {
-        "relationship": "HAS_TABLE",
-        "src_type": "Catalog",
-        "dst_type": "Table"
-      },
-      {
-        "relationship": "HAS_FIELD",
-        "src_type": "Table",
-        "dst_type": "Field"
-      }
-    ]
   }
 }
