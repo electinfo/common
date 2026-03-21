@@ -98,7 +98,7 @@
       {
         "relationship": "REGISTERED_IN",
         "src_type": "Voter",
-        "dst_type": "Office"
+        "dst_type": "District"
       },
       {
         "relationship": "AFFILIATED_WITH",
