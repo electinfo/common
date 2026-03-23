@@ -187,9 +187,24 @@
         "dst_type": "Party"
       },
       {
+        "relationship": "CONTRIBUTED_TO",
+        "src_type": "Committee",
+        "dst_type": "Candidate"
+      },
+      {
         "relationship": "ACTIVE_IN",
         "src_type": "Committee",
         "dst_type": "Cycle"
+      },
+      {
+        "relationship": "PAYS",
+        "src_type": "Committee",
+        "dst_type": "Vendor"
+      },
+      {
+        "relationship": "CONTRIBUTED_TO",
+        "src_type": "Individual",
+        "dst_type": "Committee"
       }
     ]
   },
