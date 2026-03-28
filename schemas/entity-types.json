@@ -1,6 +1,6 @@
 {
   "entityTypes": {
-    "Candidate":  { "plural": "candidates" },
+    "Politician":  { "plural": "politicians" },
     "Committee":  { "plural": "committees" },
     "Individual": { "plural": "individuals" },
     "Employer":   { "plural": "employers" },
@@ -16,7 +16,6 @@
     "PostalCode": { "plural": "postalcodes" },
     "Precinct":   { "plural": "precincts" },
     "Tract":      { "plural": "tracts" },
-    "Block":      { "plural": "blocks" },
-    "OfficeHolder": { "plural": "officeholders" }
+    "Block":      { "plural": "blocks" }
   }
 }

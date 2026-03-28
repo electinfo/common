@@ -1,0 +1,28 @@
+# Organization Name Leading Stopwords
+# Words stripped from the beginning of organization names before ID computation.
+# Stripping these ensures "THE COCA COLA COMPANY" and "COCA COLA COMPANY" resolve
+# to the same entity (same UUID5).
+#
+# Used by:
+#   - Pipeline quicksilver employer_entities (UUID5 ID computation)
+#   - Gold company_resolution (Splink first-word blocking)
+#   - Gold edge builders (employer UUID5 consistency)
+#
+# Rules:
+#   - All values must be UPPER-CASE
+#   - Only articles, conjunctions, and prepositions — never nouns/adjectives
+#   - Two-pass stripping handles up to 2 consecutive leading stopwords
+
+leading:
+  - "THE"
+  - "A"
+  - "AN"
+  - "AND"
+  - "OF"
+  - "FOR"
+  - "IN"
+  - "AT"
+  - "BY"
+  - "TO"
+  - "ON"
+  - "OR"
