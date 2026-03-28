@@ -94,23 +94,7 @@
     "entities": [
       "Voter"
     ],
-    "edges": [
-      {
-        "relationship": "REGISTERED_IN",
-        "src_type": "Voter",
-        "dst_type": "District"
-      },
-      {
-        "relationship": "AFFILIATED_WITH",
-        "src_type": "Voter",
-        "dst_type": "Party"
-      },
-      {
-        "relationship": "REGISTERED_IN",
-        "src_type": "Voter",
-        "dst_type": "State"
-      }
-    ]
+    "edges": []
   },
   "congress.gov": {
     "catalog": "congress_gov",
