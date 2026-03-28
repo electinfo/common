@@ -6,8 +6,8 @@ from electinfo_common import canonical_path
 @pytest.mark.parametrize(
     "entity_type, entity_id, expected",
     [
-        ("Candidate", "P80000722", "candidates/p80000722"),
-        ("Candidate", "H6CA12345", "candidates/h6ca12345"),
+        ("Politician", "P80000722", "politicians/p80000722"),
+        ("Politician", "H6CA12345", "politicians/h6ca12345"),
         ("Committee", "C00401224", "committees/c00401224"),
         ("Individual", "I-a7f3b2c1e9d8f4a6", "individuals/i-a7f3b2c1e9d8f4a6"),
         ("Employer", "O-8b3f1a2e9c7d5b4a", "employers/o-8b3f1a2e9c7d5b4a"),
