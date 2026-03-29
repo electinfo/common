@@ -5,8 +5,9 @@ metadata:
   namespace: tekton-pipelines
 spec:
   description: |
-    Trigger a spark-images-build PipelineRun targeting only spark-runner.
-    Called after pypi-publish to roll out the latest electinfo-common.
+    Trigger a spark-images-build PipelineRun targeting spark-runner and
+    spark-connect-server. Called after pypi-publish to roll out the latest
+    electinfo-common across all images that depend on it.
   steps:
     - name: create-pipelinerun
       image: bitnami/kubectl:latest
@@ -14,7 +15,7 @@ spec:
         #!/bin/sh
         set -e
 
-        echo "Triggering spark-images-build for spark-runner..."
+        echo "Triggering spark-images-build for spark-runner + spark-connect-server..."
 
         cat <<'EOF' | kubectl create -f -
         apiVersion: tekton.dev/v1
@@ -38,7 +39,7 @@ spec:
             - name: tag
               value: latest
             - name: targets
-              value: spark-runner
+              value: "spark-runner spark-connect-server"
           workspaces:
             - name: shared-workspace
               volumeClaimTemplate:
@@ -50,4 +51,4 @@ spec:
                       storage: 2Gi
         EOF
 
-        echo "PipelineRun created. spark-runner rebuild is in progress."
+        echo "PipelineRun created. spark-runner + spark-connect-server rebuild is in progress."
