@@ -189,6 +189,11 @@
         "relationship": "CONTRIBUTED_TO",
         "src_type": "Individual",
         "dst_type": "Committee"
+      },
+      {
+        "relationship": "EMPLOYED_BY",
+        "src_type": "Individual",
+        "dst_type": "Employer"
       }
     ]
   },
