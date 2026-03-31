@@ -176,6 +176,11 @@
         "dst_type": "Candidate"
       },
       {
+        "relationship": "TRANSFERS_TO",
+        "src_type": "Committee",
+        "dst_type": "Committee"
+      },
+      {
         "relationship": "ACTIVE_IN",
         "src_type": "Committee",
         "dst_type": "Cycle"
@@ -194,6 +199,16 @@
         "relationship": "EMPLOYED_BY",
         "src_type": "Individual",
         "dst_type": "Employer"
+      },
+      {
+        "relationship": "RESIDES_IN",
+        "src_type": "Individual",
+        "dst_type": "Place"
+      },
+      {
+        "relationship": "RESIDES_IN",
+        "src_type": "Individual",
+        "dst_type": "PostalCode"
       }
     ]
   },
@@ -418,6 +433,11 @@
       "Vendor"
     ],
     "edges": [
+      {
+        "relationship": "TRANSFERS_TO",
+        "src_type": "Committee",
+        "dst_type": "Committee"
+      },
       {
         "relationship": "PAYS",
         "src_type": "Committee",
