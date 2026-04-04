@@ -12,6 +12,32 @@ import officeCodesSchema from '../../../schemas/office-codes.json';
 // Re-export raw schemas
 export { urlPatterns, constants, entityTypesSchema, partyCodesSchema, stateCodesSchema, officeCodesSchema };
 
+// Re-export entity types
+export type {
+  Candidate,
+  Committee,
+  Individual,
+  Donor,
+  Office,
+  District,
+  State,
+  Party,
+  Election,
+  Contribution,
+  CmsEntity,
+  AnyEntity,
+  PaginatedResponse,
+  GraphQLResponse
+} from './types/entities';
+
+export {
+  EntityType,
+  isCandidate,
+  isCommittee,
+  isIndividual,
+  getEntityType
+} from './types/entities';
+
 // Type definitions
 export interface UrlPatternConfig {
   candidate: {
@@ -243,3 +269,24 @@ export function canonicalPath(entityType: string, id: string): string {
   }
   return `${config.plural}/${id.toLowerCase()}`;
 }
+
+// CMS-merged types and utilities
+export type {
+  CandidateMerged,
+  CommitteeMerged,
+  IndividualMerged,
+} from './types/cms-merged';
+
+export {
+  isCandidateMerged,
+  isCommitteeMerged,
+  isIndividualMerged,
+} from './types/cms-merged';
+
+// CMS data loader
+export {
+  CMSLoader,
+  createCMSLoader,
+  type CMSLoaderConfig,
+  type MergeOptions,
+} from './loaders/cms-loader';
