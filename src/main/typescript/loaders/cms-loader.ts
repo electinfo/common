@@ -139,7 +139,7 @@ export class CMSLoader {
     if (cached) return cached;
 
     try {
-      const response = await this.fetchWithTimeout<Candidate>(
+      const response = await this.fetchWithTimeout<GraphQLResponse<Candidate>>(
         this.config.graphqlEndpoint,
         {
           method: 'POST',
@@ -169,7 +169,7 @@ export class CMSLoader {
         },
       );
 
-      const candidate = response?.data?.candidateById || null;
+      const candidate = (response?.data?.candidateById as Candidate) || null;
       if (candidate) {
         this.cache?.set(cacheKey, candidate);
       }
@@ -213,7 +213,7 @@ export class CMSLoader {
     if (cached) return cached;
 
     try {
-      const response = await this.fetchWithTimeout<Committee>(
+      const response = await this.fetchWithTimeout<GraphQLResponse<Committee>>(
         this.config.graphqlEndpoint,
         {
           method: 'POST',
@@ -240,7 +240,7 @@ export class CMSLoader {
         },
       );
 
-      const committee = response?.data?.committeeById || null;
+      const committee = (response?.data?.committeeById as Committee) || null;
       if (committee) {
         this.cache?.set(cacheKey, committee);
       }
@@ -307,7 +307,7 @@ export class CMSLoader {
       ...graphqlData,
       ...(cmsData && {
         cmsId: cmsData.id,
-        description: cmsData.description || graphqlData.description,
+        description: cmsData.description || undefined,
         photo: cmsData.photo || undefined,
         editorial: cmsData.editorial,
       }),
@@ -356,7 +356,7 @@ export class CMSLoader {
       ...graphqlData,
       ...(cmsData && {
         cmsId: cmsData.id,
-        description: cmsData.description || graphqlData.description,
+        description: cmsData.description || undefined,
         logo: cmsData.logo || undefined,
         editorial: cmsData.editorial,
       }),
@@ -419,7 +419,7 @@ export class CMSLoader {
    */
   private async fetchIndividualFromGraphQL(id: string): Promise<Individual | null> {
     try {
-      const response = await this.fetchWithTimeout<Individual>(
+      const response = await this.fetchWithTimeout<GraphQLResponse<Individual>>(
         this.config.graphqlEndpoint,
         {
           method: 'POST',
@@ -445,7 +445,7 @@ export class CMSLoader {
         },
       );
 
-      return response?.data?.individualById || null;
+      return (response?.data?.individualById as Individual) || null;
     } catch (error) {
       console.error(`Failed to fetch individual ${id} from GraphQL:`, error);
       return null;
