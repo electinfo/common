@@ -267,6 +267,101 @@ export interface CodeSource {
 // ============================================================================
 
 /**
+ * Canonical data type categories available from data sources.
+ * Values match Payload CMS select options on the DataSource collection.
+ */
+export enum DataType {
+  ACTIONS = 'actions',
+  BALLOT_MEASURES = 'ballot-measures',
+  BILLS = 'bills',
+  CAMPAIGN_FINANCE = 'campaign-finance',
+  CANDIDATES = 'candidates',
+  COMMITTEES = 'committees',
+  CONGRESSIONAL_DISTRICTS = 'congressional-districts',
+  CONGRESSIONAL_RECORD = 'congressional-record',
+  CONTACT_INFORMATION = 'contact-information',
+  CONTRIBUTIONS = 'contributions',
+  CORPORATE_OWNERSHIP = 'corporate-ownership',
+  COUNTIES = 'counties',
+  COUNTY_RESULTS = 'county-results',
+  DEMOGRAPHICS = 'demographics',
+  ELECTION_RESULTS = 'election-results',
+  EVENTS = 'events',
+  EXPENDITURES = 'expenditures',
+  FILINGS = 'filings',
+  GLOBAL_KNOWLEDGE_GRAPH = 'global-knowledge-graph',
+  JURISDICTIONS = 'jurisdictions',
+  LEGAL_ENTITIES = 'legal-entities',
+  LEGISLATORS = 'legislators',
+  LOBBYING = 'lobbying',
+  MEMBERS = 'members',
+  NEWS_ARTICLES = 'news-articles',
+  ORGANIZATIONS = 'organizations',
+  PARENT_SUBSIDIARY_RELATIONSHIPS = 'parent-subsidiary-relationships',
+  PEOPLE = 'people',
+  PLACES = 'places',
+  PRECINCT_BOUNDARIES = 'precinct-boundaries',
+  PRECINCT_RESULTS = 'precinct-results',
+  RESOLUTIONS = 'resolutions',
+  SESSIONS = 'sessions',
+  SPONSORS = 'sponsors',
+  STATE_DISTRICTS = 'state-districts',
+  STATES = 'states',
+  VOTE_COUNTS = 'vote-counts',
+  VOTER_DEMOGRAPHICS = 'voter-demographics',
+  VOTER_REGISTRATION = 'voter-registration',
+  VOTES = 'votes',
+  ZIP_CODES = 'zip-codes',
+}
+
+/**
+ * Human-readable labels for DataType enum values
+ */
+export const DataTypeLabels: Record<DataType, string> = {
+  [DataType.ACTIONS]: 'Actions',
+  [DataType.BALLOT_MEASURES]: 'Ballot Measures',
+  [DataType.BILLS]: 'Bills',
+  [DataType.CAMPAIGN_FINANCE]: 'Campaign Finance',
+  [DataType.CANDIDATES]: 'Candidates',
+  [DataType.COMMITTEES]: 'Committees',
+  [DataType.CONGRESSIONAL_DISTRICTS]: 'Congressional Districts',
+  [DataType.CONGRESSIONAL_RECORD]: 'Congressional Record',
+  [DataType.CONTACT_INFORMATION]: 'Contact Information',
+  [DataType.CONTRIBUTIONS]: 'Contributions',
+  [DataType.CORPORATE_OWNERSHIP]: 'Corporate Ownership',
+  [DataType.COUNTIES]: 'Counties',
+  [DataType.COUNTY_RESULTS]: 'County Results',
+  [DataType.DEMOGRAPHICS]: 'Demographics',
+  [DataType.ELECTION_RESULTS]: 'Election Results',
+  [DataType.EVENTS]: 'Events',
+  [DataType.EXPENDITURES]: 'Expenditures',
+  [DataType.FILINGS]: 'Filings',
+  [DataType.GLOBAL_KNOWLEDGE_GRAPH]: 'Global Knowledge Graph',
+  [DataType.JURISDICTIONS]: 'Jurisdictions',
+  [DataType.LEGAL_ENTITIES]: 'Legal Entities',
+  [DataType.LEGISLATORS]: 'Legislators',
+  [DataType.LOBBYING]: 'Lobbying',
+  [DataType.MEMBERS]: 'Members',
+  [DataType.NEWS_ARTICLES]: 'News Articles',
+  [DataType.ORGANIZATIONS]: 'Organizations',
+  [DataType.PARENT_SUBSIDIARY_RELATIONSHIPS]: 'Parent-Subsidiary Relationships',
+  [DataType.PEOPLE]: 'People',
+  [DataType.PLACES]: 'Places',
+  [DataType.PRECINCT_BOUNDARIES]: 'Precinct Boundaries',
+  [DataType.PRECINCT_RESULTS]: 'Precinct Results',
+  [DataType.RESOLUTIONS]: 'Resolutions',
+  [DataType.SESSIONS]: 'Sessions',
+  [DataType.SPONSORS]: 'Sponsors',
+  [DataType.STATE_DISTRICTS]: 'State Districts',
+  [DataType.STATES]: 'States',
+  [DataType.VOTE_COUNTS]: 'Vote Counts',
+  [DataType.VOTER_DEMOGRAPHICS]: 'Voter Demographics',
+  [DataType.VOTER_REGISTRATION]: 'Voter Registration',
+  [DataType.VOTES]: 'Votes',
+  [DataType.ZIP_CODES]: 'ZIP Codes',
+};
+
+/**
  * DataSource - External data source powering elect.info
  * CMS-native entity: Payload CMS is the authoritative source (not Neo4j)
  */
@@ -276,7 +371,7 @@ export interface DataSource {
   url: string;
   domain: string;
   description: string;
-  dataTypes: string[];
+  dataTypes: DataType[];
   icon?: string; // Emoji icon for display
 
   // Editorial

@@ -33,6 +33,8 @@ export type {
 } from './types/entities';
 
 export {
+  DataType,
+  DataTypeLabels,
   EntityType,
   isCandidate,
   isCodeSource,
