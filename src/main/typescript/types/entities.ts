@@ -238,20 +238,73 @@ export interface Election {
 }
 
 // ============================================================================
+// CODE SOURCES (CMS-native)
+// ============================================================================
+
+/**
+ * CodeSource - Open source code repository powering elect.info
+ * CMS-native entity: Payload CMS is the authoritative source (not Neo4j)
+ */
+export interface CodeSource {
+  id: string; // Payload document ID
+  name: string;
+  url: string;
+  domain: string;
+  description?: string;
+  repos: string[];
+
+  // Editorial
+  cmsStatus: 'draft' | 'published' | 'archived';
+  cmsNotes?: string;
+
+  // Payload timestamps
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+// ============================================================================
+// DATA SOURCES (CMS-native)
+// ============================================================================
+
+/**
+ * DataSource - External data source powering elect.info
+ * CMS-native entity: Payload CMS is the authoritative source (not Neo4j)
+ */
+export interface DataSource {
+  id: string; // Payload document ID
+  name: string;
+  url: string;
+  domain: string;
+  description: string;
+  dataTypes: string[];
+  icon?: string; // Emoji icon for display
+
+  // Editorial
+  cmsStatus: 'draft' | 'published' | 'archived';
+  cmsNotes?: string;
+
+  // Payload timestamps
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+// ============================================================================
 // UNION TYPES & HELPERS
 // ============================================================================
 
 /**
  * Any entity type that can have a description in the CMS
  */
-export type CmsEntity = Candidate | Committee | Individual;
+export type CmsEntity = Candidate | CodeSource | Committee | DataSource | Individual;
 
 /**
  * All entity types
  */
 export type AnyEntity =
   | Candidate
+  | CodeSource
   | Committee
+  | DataSource
   | Individual
   | Office
   | District
@@ -265,7 +318,9 @@ export type AnyEntity =
  */
 export enum EntityType {
   CANDIDATE = 'candidate',
+  CODE_SOURCE = 'code-source',
   COMMITTEE = 'committee',
+  DATA_SOURCE = 'data-source',
   INDIVIDUAL = 'individual',
   DONOR = 'donor', // Alias for individual
   OFFICE = 'office',
@@ -284,10 +339,24 @@ export function isCandidate(entity: any): entity is Candidate {
 }
 
 /**
+ * Type guard to check if entity is a CodeSource
+ */
+export function isCodeSource(entity: any): entity is CodeSource {
+  return entity && 'domain' in entity && 'repos' in entity && Array.isArray(entity.repos);
+}
+
+/**
  * Type guard to check if entity is a Committee
  */
 export function isCommittee(entity: any): entity is Committee {
   return entity && 'type' in entity && ['pac', 'super-pac', 'party', 'hybrid', 'leadership', 'other'].includes(entity.type);
+}
+
+/**
+ * Type guard to check if entity is a DataSource
+ */
+export function isDataSource(entity: any): entity is DataSource {
+  return entity && 'domain' in entity && 'dataTypes' in entity && Array.isArray(entity.dataTypes);
 }
 
 /**
@@ -302,7 +371,9 @@ export function isIndividual(entity: any): entity is Individual {
  */
 export function getEntityType(entity: any): EntityType | null {
   if (isCandidate(entity)) return EntityType.CANDIDATE;
+  if (isCodeSource(entity)) return EntityType.CODE_SOURCE;
   if (isCommittee(entity)) return EntityType.COMMITTEE;
+  if (isDataSource(entity)) return EntityType.DATA_SOURCE;
   if (isIndividual(entity)) return EntityType.INDIVIDUAL;
   if (entity && entity.type === 'office') return EntityType.OFFICE;
   if (entity && 'number' in entity && entity.state) return EntityType.DISTRICT;

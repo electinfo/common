@@ -15,7 +15,9 @@ export { urlPatterns, constants, entityTypesSchema, partyCodesSchema, stateCodes
 // Re-export entity types
 export type {
   Candidate,
+  CodeSource,
   Committee,
+  DataSource,
   Individual,
   Donor,
   Office,
@@ -33,7 +35,9 @@ export type {
 export {
   EntityType,
   isCandidate,
+  isCodeSource,
   isCommittee,
+  isDataSource,
   isIndividual,
   getEntityType
 } from './types/entities';
