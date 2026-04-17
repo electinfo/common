@@ -1,6 +1,7 @@
 {
   "entityTypes": {
     "Politician":  { "plural": "politicians" },
+    "Candidate":   { "plural": "candidates" },
     "Committee":  { "plural": "committees" },
     "Individual": { "plural": "individuals" },
     "Employer":   { "plural": "employers" },
