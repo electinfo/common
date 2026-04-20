@@ -17,7 +17,35 @@ This repository ensures consistency across the electinfo platform by providing:
 1. **URL Patterns** - Canonical patterns for entity page URLs
 2. **Constants** - State names, party codes, committee types, etc.
 3. **JSON Schemas** - Validation schemas for data structures
-4. **Templates** - Shared HTML/Mustache templates (future)
+4. **Quicksilver Model** - Auto-generated Spark StructType definitions for all entity/edge types
+5. **Templates** - Shared HTML/Mustache templates (future)
+
+## Quicksilver Model Code Generation
+
+The `schemas/quicksilver-metamodel.json` file is the single source of truth for all quicksilver entity and edge schemas. The generator produces:
+
+- **Scala** (`src/main/scala/info/elect/model/`) — one object per entity/edge with `StructType` + metadata
+- **Neo4j constraints** — can be generated via the session-local generator in data/
+
+### Workflow
+
+```bash
+# Regenerate Scala from metamodel:
+npm run generate:scala
+
+# Check if generated files are up-to-date (CI):
+npm run generate:scala:check
+
+# sbt compile auto-runs the generator via sourceGenerators
+sbt compile
+```
+
+### Adding/modifying a schema
+
+1. Edit `schemas/quicksilver-metamodel.json` (add fields, entities, edges)
+2. Run `npm run generate:scala`
+3. Commit both the JSON and the generated Scala files
+4. CI verifies with `npm run generate:scala:check`
 
 ## Repository Structure
 
@@ -28,23 +56,38 @@ common/
 ├── build.sbt              # sbt/Maven config
 ├── tsconfig.json          # TypeScript config
 ├── pyproject.toml         # Python package config (hatchling)
-├── schemas/               # JSON schemas
-│   ├── url-patterns.json  # Entity URL patterns
-│   └── constants.json     # Shared constants
-├── templates/             # Shared templates (future)
+├── schemas/                           # JSON schemas (source of truth)
+│   ├── quicksilver-metamodel.json     # Quicksilver entity/edge metamodel
+│   ├── url-patterns.json              # Entity URL patterns
+│   └── constants.json                 # Shared constants
+├── scripts/
+│   ├── yaml2json.js                   # YAML → JSON converter
+│   └── generate-model.js             # Metamodel → Scala code generator
+├── templates/                         # Shared templates (future)
 └── src/
     ├── main/
     │   ├── typescript/
-    │   │   └── index.ts           # TypeScript exports
+    │   │   └── index.ts               # TypeScript exports
     │   ├── python/
     │   │   └── electinfo_common/
-    │   │       ├── __init__.py    # Public API
-    │   │       ├── _schemas.py    # JSON schema loading
-    │   │       ├── constants.py   # Constants class
-    │   │       ├── url_patterns.py# UrlPatterns class
-    │   │       ├── slug.py        # make_slug()
-    │   │       └── py.typed       # PEP 561 marker
-    │   └── scala/                 # (future: Scala wrappers)
+    │   │       ├── __init__.py        # Public API
+    │   │       ├── _schemas.py        # JSON schema loading
+    │   │       ├── constants.py       # Constants class
+    │   │       ├── url_patterns.py    # UrlPatterns class
+    │   │       ├── slug.py            # make_slug()
+    │   │       └── py.typed           # PEP 561 marker
+    │   └── scala/                     # AUTO-GENERATED — do not edit
+    │       └── info/elect/model/
+    │           ├── SchemaBase.scala        # req/opt helpers + base columns
+    │           ├── QuicksilverSchemas.scala # Registry + utilities
+    │           ├── entities/              # One file per entity type
+    │           │   ├── CandidateEntity.scala
+    │           │   ├── CommitteeEntity.scala
+    │           │   └── ...
+    │           └── edges/                 # One file per edge type
+    │               ├── IndividualCommitteeEdge.scala
+    │               ├── CommitteeVendorEdge.scala
+    │               └── ...
     └── test/
         └── python/
             ├── test_constants.py

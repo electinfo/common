@@ -11,7 +11,9 @@
   ],
   "scripts": {
     "yaml2json": "node scripts/yaml2json.js",
-    "build": "npm run yaml2json && tsc",
+    "generate:scala": "node scripts/generate-model.js",
+    "generate:scala:check": "node scripts/generate-model.js --check",
+    "build": "npm run yaml2json && npm run generate:scala && tsc",
     "prepublishOnly": "npm run build"
   },
   "repository": {

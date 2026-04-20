@@ -1,0 +1,1050 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://elect.info/schemas/quicksilver/v1",
+  "title": "Quicksilver Schema Metamodel",
+  "description": "JSON Schema metamodel for quicksilver entity and edge tables. Generates: (1) Spark StructType definitions in Scala, (2) Neo4j 5.21+ type/property constraints. Each $def is a table schema; 'required' = source must provide the column (Spark nullable=false), absent from required = optional/null-filled.",
+
+  "$defs": {
+
+    "sparkTypeAnnotation": {
+      "description": "Custom vocabulary: x-spark-type maps JSON Schema types to Spark DataTypes where the mapping is ambiguous (e.g. integer → IntegerType vs LongType). x-neo4j-type provides the Neo4j property type.",
+      "type": "object"
+    },
+
+    "entityBase": {
+      "type": "object",
+      "description": "Base columns present on every entity table.",
+      "properties": {
+        "catalog": { "type": "string", "description": "Origin catalog, set by QuicksilverConsolidation. Optional so source pipelines can omit it." },
+        "id":      { "type": "string" },
+        "type":    { "type": "string" }
+      },
+      "required": ["id", "type"]
+    },
+
+    "edgeBase": {
+      "type": "object",
+      "description": "Base columns present on every edge table.",
+      "properties": {
+        "catalog":      { "type": "string", "description": "Origin catalog" },
+        "src":          { "type": "string" },
+        "dst":          { "type": "string" },
+        "src_type":     { "type": "string" },
+        "dst_type":     { "type": "string" },
+        "relationship": { "type": "string" }
+      },
+      "required": ["src", "dst", "src_type", "dst_type", "relationship"]
+    },
+
+    "candidate_entities": {
+      "allOf": [{ "$ref": "#/$defs/entityBase" }],
+      "x-label": "Candidate",
+      "x-kind": "entity",
+      "x-description": "Political candidates across all jurisdictions",
+      "properties": {
+        "full_name":                   { "type": "string" },
+        "full_name_normalized":        { "type": "string" },
+        "first_name":                  { "type": "string" },
+        "last_name":                   { "type": "string" },
+        "middle_name":                 { "type": "string" },
+        "name_suffix":                 { "type": "string" },
+        "city":                        { "type": "string" },
+        "state":                       { "type": "string" },
+        "zip":                         { "type": "string" },
+        "county":                      { "type": "string" },
+        "office":                      { "type": "string" },
+        "office_state":                { "type": "string" },
+        "office_district":             { "type": "string" },
+        "office_code":                 { "type": "string" },
+        "office_desc":                 { "type": "string" },
+        "district":                    { "type": "string" },
+        "jurisdiction":                { "type": "string" },
+        "seek_office":                 { "type": "string" },
+        "seek_office_district":        { "type": "string" },
+        "seek_office_descr":           { "type": "string" },
+        "hold_office":                 { "type": "string" },
+        "hold_office_district":        { "type": "string" },
+        "hold_office_descr":           { "type": "string" },
+        "incumbent_challenger_status": { "type": "string" },
+        "candidate_status":            { "type": "string" },
+        "candidate_type":              { "type": "string" },
+        "status":                      { "type": "string" },
+        "status_code":                 { "type": "string" },
+        "status_desc":                 { "type": "string" },
+        "principal_campaign_committee": { "type": "string" },
+        "fec_candidate_id":            { "type": "string" },
+        "tec_filer_id":                { "type": "string" },
+        "fl_doe_acct_num":             { "type": "string" },
+        "az_sos_candidate_id":         { "type": "string" },
+        "wa_pdc_filer_id":             { "type": "string" },
+        "me_ethics_org_id":            { "type": "string" },
+        "ca_fppc_filer_id":            { "type": "string" },
+        "oh_sos_master_key":           { "type": "string" },
+        "bioguide_id":                 { "type": "string" },
+        "is_current":                  { "type": "string" },
+        "portrait_url":                { "type": "string" },
+        "most_recent_state":           { "type": "string" },
+        "most_recent_chamber":         { "type": "string" },
+        "eff_start_dt":                { "type": "string", "format": "date-time", "x-spark-type": "TimestampType", "x-neo4j-type": "ZONED DATETIME" },
+        "eff_stop_dt":                 { "type": "string", "format": "date-time", "x-spark-type": "TimestampType", "x-neo4j-type": "ZONED DATETIME" }
+      },
+      "required": ["full_name"]
+    },
+
+    "committee_entities": {
+      "allOf": [{ "$ref": "#/$defs/entityBase" }],
+      "x-label": "Committee",
+      "x-kind": "entity",
+      "x-description": "Political committees (PACs, party committees, campaign committees)",
+      "properties": {
+        "committee_name":            { "type": "string" },
+        "committee_name_normalized": { "type": "string" },
+        "committee_type":            { "type": "string" },
+        "committee_designation":     { "type": "string" },
+        "committee_status":          { "type": "string" },
+        "filer_type":                { "type": "string" },
+        "persent_type":              { "type": "string" },
+        "type_desc":                 { "type": "string" },
+        "treasurer_name":            { "type": "string" },
+        "chair_name":                { "type": "string" },
+        "party":                     { "type": "string" },
+        "party_affiliation":         { "type": "string" },
+        "connected_org":             { "type": "string" },
+        "candidate_id":              { "type": "string" },
+        "city":                      { "type": "string" },
+        "state":                     { "type": "string" },
+        "zip":                       { "type": "string" },
+        "county":                    { "type": "string" },
+        "fec_committee_id":          { "type": "string" },
+        "tec_filer_id":              { "type": "string" },
+        "fl_doe_acct_num":           { "type": "string" },
+        "az_sos_committee_id":       { "type": "string" },
+        "wa_pdc_filer_id":           { "type": "string" },
+        "me_ethics_org_id":          { "type": "string" },
+        "ca_fppc_filer_id":          { "type": "string" },
+        "oh_sos_master_key":         { "type": "string" },
+        "eff_start_dt":              { "type": "string", "format": "date-time", "x-spark-type": "TimestampType", "x-neo4j-type": "ZONED DATETIME" },
+        "eff_stop_dt":               { "type": "string", "format": "date-time", "x-spark-type": "TimestampType", "x-neo4j-type": "ZONED DATETIME" }
+      },
+      "required": ["committee_name"]
+    },
+
+    "individual_entities": {
+      "allOf": [{ "$ref": "#/$defs/entityBase" }],
+      "x-label": "Individual",
+      "x-kind": "entity",
+      "x-description": "Individual donors/contributors",
+      "properties": {
+        "name":               { "type": "string" },
+        "first_name":         { "type": "string" },
+        "last_name":          { "type": "string" },
+        "middle_name":        { "type": "string" },
+        "city":               { "type": "string" },
+        "state":              { "type": "string" },
+        "zip_code":           { "type": "string" },
+        "employer":           { "type": "string" },
+        "occupation":         { "type": "string" },
+        "contribution_count": { "type": "integer", "x-spark-type": "LongType",    "x-neo4j-type": "INTEGER" },
+        "committee_count":    { "type": "integer", "x-spark-type": "IntegerType", "x-neo4j-type": "INTEGER" },
+        "first_contribution": { "type": "string",  "format": "date", "x-spark-type": "DateType", "x-neo4j-type": "DATE" },
+        "last_contribution":  { "type": "string",  "format": "date", "x-spark-type": "DateType", "x-neo4j-type": "DATE" },
+        "cycles":             { "type": "string" }
+      },
+      "required": ["name"]
+    },
+
+    "vendor_entities": {
+      "allOf": [{ "$ref": "#/$defs/entityBase" }],
+      "x-label": "Vendor",
+      "x-kind": "entity",
+      "x-description": "Payees/vendors receiving disbursements from committees",
+      "properties": {
+        "name":               { "type": "string" },
+        "name_normalized":    { "type": "string" },
+        "payee_name":         { "type": "string" },
+        "payee_normalized":   { "type": "string" },
+        "city":               { "type": "string" },
+        "state":              { "type": "string" },
+        "total_received":     { "type": "number", "x-spark-type": "DoubleType", "x-neo4j-type": "FLOAT" },
+        "total_amount":       { "type": "number", "x-spark-type": "DoubleType", "x-neo4j-type": "FLOAT" },
+        "payment_count":      { "type": "integer", "x-spark-type": "LongType",    "x-neo4j-type": "INTEGER" },
+        "client_count":       { "type": "integer", "x-spark-type": "IntegerType", "x-neo4j-type": "INTEGER" },
+        "committee_count":    { "type": "integer", "x-spark-type": "LongType",    "x-neo4j-type": "INTEGER" },
+        "purpose_categories": { "type": "string" },
+        "expn_desc":          { "type": "string" },
+        "first_payment":      { "type": "string", "format": "date", "x-spark-type": "DateType", "x-neo4j-type": "DATE" },
+        "last_payment":       { "type": "string", "format": "date", "x-spark-type": "DateType", "x-neo4j-type": "DATE" },
+        "cycles":             { "type": "string" }
+      },
+      "required": ["name"]
+    },
+
+    "employer_entities": {
+      "allOf": [{ "$ref": "#/$defs/entityBase" }],
+      "x-label": "Employer",
+      "x-kind": "entity",
+      "x-description": "Employers of individual donors",
+      "properties": {
+        "name":                         { "type": "string" },
+        "name_normalized":              { "type": "string" },
+        "employee_donor_count":         { "type": "integer", "x-spark-type": "LongType",    "x-neo4j-type": "INTEGER" },
+        "total_employee_contributions": { "type": "number",  "x-spark-type": "DoubleType",  "x-neo4j-type": "FLOAT" },
+        "contribution_count":           { "type": "integer", "x-spark-type": "LongType",    "x-neo4j-type": "INTEGER" },
+        "committee_count":              { "type": "integer", "x-spark-type": "IntegerType", "x-neo4j-type": "INTEGER" },
+        "first_contribution":           { "type": "string",  "format": "date", "x-spark-type": "DateType", "x-neo4j-type": "DATE" },
+        "last_contribution":            { "type": "string",  "format": "date", "x-spark-type": "DateType", "x-neo4j-type": "DATE" },
+        "cycles":                       { "type": "string" }
+      },
+      "required": ["name"]
+    },
+
+    "company_entities": {
+      "allOf": [{ "$ref": "#/$defs/entityBase" }],
+      "x-label": "Company",
+      "x-kind": "entity",
+      "x-description": "Corporate entities (LEI-identified)",
+      "properties": {
+        "name":                     { "type": "string" },
+        "name_normalized":          { "type": "string" },
+        "lei":                      { "type": "string" },
+        "city":                     { "type": "string" },
+        "state":                    { "type": "string" },
+        "entity_category":          { "type": "string" },
+        "entity_status":            { "type": "string" },
+        "legal_form_code":          { "type": "string" },
+        "jurisdiction_country":     { "type": "string" },
+        "jurisdiction_subdivision": { "type": "string" }
+      },
+      "required": ["name"]
+    },
+
+    "office_entities": {
+      "allOf": [{ "$ref": "#/$defs/entityBase" }],
+      "x-label": "Office",
+      "x-kind": "entity",
+      "x-description": "Political offices (seats)",
+      "properties": {
+        "office_key":  { "type": "string" },
+        "office_type": { "type": "string" },
+        "state":       { "type": "string" },
+        "district":    { "type": "string" },
+        "chamber":     { "type": "string" }
+      },
+      "required": ["office_key", "office_type"]
+    },
+
+    "cycle_entities": {
+      "allOf": [{ "$ref": "#/$defs/entityBase" }],
+      "x-label": "Cycle",
+      "x-kind": "entity",
+      "x-description": "Election cycles (2-year periods)",
+      "properties": {
+        "cycle_year": { "type": "integer", "x-spark-type": "LongType", "x-neo4j-type": "INTEGER" },
+        "start_date": { "type": "string",  "format": "date", "x-spark-type": "DateType", "x-neo4j-type": "DATE" },
+        "end_date":   { "type": "string",  "format": "date", "x-spark-type": "DateType", "x-neo4j-type": "DATE" },
+        "cycle_type": { "type": "string" }
+      },
+      "required": ["cycle_year"]
+    },
+
+    "party_entities": {
+      "allOf": [{ "$ref": "#/$defs/entityBase" }],
+      "x-label": "Party",
+      "x-kind": "entity",
+      "x-description": "Political parties",
+      "properties": {
+        "party_code":      { "type": "string" },
+        "party_name":      { "type": "string" },
+        "candidate_count": { "type": "integer", "x-spark-type": "LongType", "x-neo4j-type": "INTEGER" },
+        "committee_count": { "type": "integer", "x-spark-type": "LongType", "x-neo4j-type": "INTEGER" },
+        "active_cycles":   { "type": "string" }
+      },
+      "required": ["party_code"]
+    },
+
+    "office_candidate_stats": {
+      "x-label": "OfficeCandidateStats",
+      "x-kind": "entity",
+      "x-base-override": true,
+      "x-description": "Aggregate candidate stats per office (does not use standard entityBase)",
+      "type": "object",
+      "properties": {
+        "catalog":         { "type": "string" },
+        "office_id":       { "type": "string" },
+        "candidate_count": { "type": "integer", "x-spark-type": "LongType", "x-neo4j-type": "INTEGER" },
+        "election_years":  { "type": "string" },
+        "active_cycles":   { "type": "string" }
+      },
+      "required": ["office_id", "candidate_count"]
+    },
+
+    "officeholder_entities": {
+      "allOf": [{ "$ref": "#/$defs/entityBase" }],
+      "x-label": "Officeholder",
+      "x-kind": "entity",
+      "x-description": "Elected officials (congress.gov sourced)",
+      "properties": {
+        "bioguide_id":         { "type": "string" },
+        "name":                { "type": "string" },
+        "first_name":          { "type": "string" },
+        "last_name":           { "type": "string" },
+        "birth_year":          { "type": "string" },
+        "death_year":          { "type": "string" },
+        "is_current":          { "type": "string" },
+        "most_recent_state":   { "type": "string" },
+        "most_recent_party":   { "type": "string" },
+        "most_recent_chamber": { "type": "string" },
+        "portrait_url":        { "type": "string" }
+      },
+      "required": ["name"]
+    },
+
+    "race_entities": {
+      "allOf": [{ "$ref": "#/$defs/entityBase" }],
+      "x-label": "Race",
+      "x-kind": "entity",
+      "x-description": "Electoral races (office + cycle)",
+      "properties": {
+        "race_key":    { "type": "string" },
+        "office_type": { "type": "string" },
+        "state":       { "type": "string" },
+        "district":    { "type": "string" },
+        "cycle_year":  { "type": "integer", "x-spark-type": "LongType", "x-neo4j-type": "INTEGER" },
+        "congress":    { "type": "integer", "x-spark-type": "LongType", "x-neo4j-type": "INTEGER" },
+        "chamber":     { "type": "string" }
+      },
+      "required": ["race_key"]
+    },
+
+    "voter_entities": {
+      "allOf": [{ "$ref": "#/$defs/entityBase" }],
+      "x-label": "Voter",
+      "x-kind": "entity",
+      "x-description": "Registered voters (civitech, per-state)",
+      "properties": {
+        "civitech_voter_id":          { "type": "string" },
+        "fips_state":                 { "type": "string" },
+        "fips_county":                { "type": "string" },
+        "state":                      { "type": "string" },
+        "name_first":                 { "type": "string" },
+        "name_middle":                { "type": "string" },
+        "name_last":                  { "type": "string" },
+        "name_suffix":                { "type": "string" },
+        "name_first_display":         { "type": "string" },
+        "name_last_display":          { "type": "string" },
+        "dt_birth":                   { "type": "string" },
+        "age":                        { "type": "integer", "x-spark-type": "IntegerType", "x-neo4j-type": "INTEGER" },
+        "gender":                     { "type": "string" },
+        "race":                       { "type": "string" },
+        "party_id":                   { "type": "string" },
+        "registration_date":          { "type": "string" },
+        "voter_status":               { "type": "string" },
+        "sos_voter_status":           { "type": "string" },
+        "city":                       { "type": "string" },
+        "addr_state":                 { "type": "string" },
+        "zip":                        { "type": "string" },
+        "latitude":                   { "type": "number", "x-spark-type": "DoubleType", "x-neo4j-type": "FLOAT" },
+        "longitude":                  { "type": "number", "x-spark-type": "DoubleType", "x-neo4j-type": "FLOAT" },
+        "county":                     { "type": "string" },
+        "congressional_district":     { "type": "string" },
+        "state_senate_district":      { "type": "string" },
+        "state_house_district":       { "type": "string" },
+        "precinct":                   { "type": "string" },
+        "score_support_gen_dem":      { "type": "number", "x-spark-type": "DoubleType", "x-neo4j-type": "FLOAT" },
+        "score_turnout_presidential": { "type": "number", "x-spark-type": "DoubleType", "x-neo4j-type": "FLOAT" },
+        "score_turnout_midterm":      { "type": "number", "x-spark-type": "DoubleType", "x-neo4j-type": "FLOAT" },
+        "first_vote_date":            { "type": "string" },
+        "last_vote_date":             { "type": "string" },
+        "total_votes":                { "type": "integer", "x-spark-type": "IntegerType", "x-neo4j-type": "INTEGER" },
+        "dem_primary_votes":          { "type": "integer", "x-spark-type": "IntegerType", "x-neo4j-type": "INTEGER" },
+        "rep_primary_votes":          { "type": "integer", "x-spark-type": "IntegerType", "x-neo4j-type": "INTEGER" }
+      },
+      "required": []
+    },
+
+    "state_entities": {
+      "allOf": [{ "$ref": "#/$defs/entityBase" }],
+      "x-label": "State",
+      "x-kind": "entity",
+      "x-description": "US states",
+      "properties": {
+        "state": { "type": "string" },
+        "name":  { "type": "string" },
+        "fips":  { "type": "string" }
+      },
+      "required": ["state"]
+    },
+
+    "county_entities": {
+      "allOf": [{ "$ref": "#/$defs/entityBase" }],
+      "x-label": "County",
+      "x-kind": "entity",
+      "x-description": "US counties",
+      "properties": {
+        "name":            { "type": "string" },
+        "state":           { "type": "string" },
+        "state_fips":      { "type": "string" },
+        "county_fips":     { "type": "string" },
+        "geoid":           { "type": "string" },
+        "latitude":        { "type": "number", "x-spark-type": "DoubleType", "x-neo4j-type": "FLOAT" },
+        "longitude":       { "type": "number", "x-spark-type": "DoubleType", "x-neo4j-type": "FLOAT" },
+        "land_area_sqmi":  { "type": "number", "x-spark-type": "DoubleType", "x-neo4j-type": "FLOAT" },
+        "water_area_sqmi": { "type": "number", "x-spark-type": "DoubleType", "x-neo4j-type": "FLOAT" }
+      },
+      "required": ["name"]
+    },
+
+    "district_entities": {
+      "allOf": [{ "$ref": "#/$defs/entityBase" }],
+      "x-label": "District",
+      "x-kind": "entity",
+      "x-description": "Congressional and state legislative districts",
+      "properties": {
+        "state":           { "type": "string" },
+        "district_number": { "type": "string" },
+        "district_type":   { "type": "string" },
+        "geoid":           { "type": "string" },
+        "geoid_cd":        { "type": "string" },
+        "name":            { "type": "string" },
+        "district_slug":   { "type": "string" },
+        "land_area_sqmi":  { "type": "number", "x-spark-type": "DoubleType", "x-neo4j-type": "FLOAT" },
+        "water_area_sqmi": { "type": "number", "x-spark-type": "DoubleType", "x-neo4j-type": "FLOAT" }
+      },
+      "required": []
+    },
+
+    "place_entities": {
+      "allOf": [{ "$ref": "#/$defs/entityBase" }],
+      "x-label": "Place",
+      "x-kind": "entity",
+      "x-description": "Census places (cities, towns, CDPs)",
+      "properties": {
+        "name":            { "type": "string" },
+        "state":           { "type": "string" },
+        "state_fips":      { "type": "string" },
+        "place_fips":      { "type": "string" },
+        "geoid":           { "type": "string" },
+        "name_normalized": { "type": "string" },
+        "lsad":            { "type": "string" },
+        "latitude":        { "type": "number", "x-spark-type": "DoubleType", "x-neo4j-type": "FLOAT" },
+        "longitude":       { "type": "number", "x-spark-type": "DoubleType", "x-neo4j-type": "FLOAT" },
+        "land_area_sqmi":  { "type": "number", "x-spark-type": "DoubleType", "x-neo4j-type": "FLOAT" },
+        "water_area_sqmi": { "type": "number", "x-spark-type": "DoubleType", "x-neo4j-type": "FLOAT" }
+      },
+      "required": ["name"]
+    },
+
+    "postalcode_entities": {
+      "allOf": [{ "$ref": "#/$defs/entityBase" }],
+      "x-label": "PostalCode",
+      "x-kind": "entity",
+      "x-description": "ZIP code tabulation areas",
+      "properties": {
+        "zip_code":       { "type": "string" },
+        "state":          { "type": "string" },
+        "geoid":          { "type": "string" },
+        "land_area_m2":   { "type": "integer", "x-spark-type": "LongType", "x-neo4j-type": "INTEGER" },
+        "water_area_m2":  { "type": "integer", "x-spark-type": "LongType", "x-neo4j-type": "INTEGER" },
+        "district_count": { "type": "integer", "x-spark-type": "LongType", "x-neo4j-type": "INTEGER" }
+      },
+      "required": ["zip_code"]
+    },
+
+    "tract_entities": {
+      "allOf": [{ "$ref": "#/$defs/entityBase" }],
+      "x-label": "Tract",
+      "x-kind": "entity",
+      "x-description": "Census tracts with demographic/economic data",
+      "properties": {
+        "state":                       { "type": "string" },
+        "county":                      { "type": "string" },
+        "tract":                       { "type": "string" },
+        "geoid":                       { "type": "string" },
+        "name":                        { "type": "string" },
+        "state_fips":                  { "type": "string" },
+        "county_fips":                 { "type": "string" },
+        "total_population":            { "type": "integer", "x-spark-type": "IntegerType", "x-neo4j-type": "INTEGER" },
+        "total_population_moe":        { "type": "integer", "x-spark-type": "IntegerType", "x-neo4j-type": "INTEGER" },
+        "median_household_income":     { "type": "integer", "x-spark-type": "IntegerType", "x-neo4j-type": "INTEGER" },
+        "median_household_income_moe": { "type": "integer", "x-spark-type": "IntegerType", "x-neo4j-type": "INTEGER" },
+        "median_home_value":           { "type": "integer", "x-spark-type": "IntegerType", "x-neo4j-type": "INTEGER" },
+        "median_gross_rent":           { "type": "integer", "x-spark-type": "IntegerType", "x-neo4j-type": "INTEGER" },
+        "total_housing_units":         { "type": "integer", "x-spark-type": "IntegerType", "x-neo4j-type": "INTEGER" },
+        "pop_white":                   { "type": "integer", "x-spark-type": "IntegerType", "x-neo4j-type": "INTEGER" },
+        "pop_black":                   { "type": "integer", "x-spark-type": "IntegerType", "x-neo4j-type": "INTEGER" },
+        "pop_asian":                   { "type": "integer", "x-spark-type": "IntegerType", "x-neo4j-type": "INTEGER" },
+        "pop_hispanic":                { "type": "integer", "x-spark-type": "IntegerType", "x-neo4j-type": "INTEGER" },
+        "pop_below_poverty":           { "type": "integer", "x-spark-type": "IntegerType", "x-neo4j-type": "INTEGER" },
+        "poverty_rate":                { "type": "number",  "x-spark-type": "DoubleType",  "x-neo4j-type": "FLOAT" },
+        "pop_hs_diploma":              { "type": "integer", "x-spark-type": "IntegerType", "x-neo4j-type": "INTEGER" },
+        "hs_diploma_pct":              { "type": "number",  "x-spark-type": "DoubleType",  "x-neo4j-type": "FLOAT" },
+        "bachelors_plus":              { "type": "integer", "x-spark-type": "LongType",    "x-neo4j-type": "INTEGER" },
+        "bachelors_plus_pct":          { "type": "number",  "x-spark-type": "DoubleType",  "x-neo4j-type": "FLOAT" },
+        "insured_pct":                 { "type": "number",  "x-spark-type": "DoubleType",  "x-neo4j-type": "FLOAT" },
+        "drove_alone_pct":             { "type": "number",  "x-spark-type": "DoubleType",  "x-neo4j-type": "FLOAT" },
+        "public_transit_pct":          { "type": "number",  "x-spark-type": "DoubleType",  "x-neo4j-type": "FLOAT" },
+        "work_from_home_pct":          { "type": "number",  "x-spark-type": "DoubleType",  "x-neo4j-type": "FLOAT" }
+      },
+      "required": []
+    },
+
+    "block_entities": {
+      "allOf": [{ "$ref": "#/$defs/entityBase" }],
+      "x-label": "Block",
+      "x-kind": "entity",
+      "x-description": "Census blocks with voter registration and turnout data",
+      "properties": {
+        "geoid":                          { "type": "string" },
+        "state_fips":                     { "type": "string" },
+        "county_fips":                    { "type": "string" },
+        "geoid_county":                   { "type": "string" },
+        "tract":                          { "type": "string" },
+        "block":                          { "type": "string" },
+        "state":                          { "type": "string" },
+        "reg_total":                      { "type": "integer", "x-spark-type": "LongType",   "x-neo4j-type": "INTEGER" },
+        "reg_dem":                        { "type": "integer", "x-spark-type": "LongType",   "x-neo4j-type": "INTEGER" },
+        "reg_rep":                        { "type": "integer", "x-spark-type": "LongType",   "x-neo4j-type": "INTEGER" },
+        "reg_ind":                        { "type": "integer", "x-spark-type": "LongType",   "x-neo4j-type": "INTEGER" },
+        "reg_oth":                        { "type": "integer", "x-spark-type": "LongType",   "x-neo4j-type": "INTEGER" },
+        "reg_male":                       { "type": "integer", "x-spark-type": "LongType",   "x-neo4j-type": "INTEGER" },
+        "reg_female":                     { "type": "integer", "x-spark-type": "LongType",   "x-neo4j-type": "INTEGER" },
+        "reg_white":                      { "type": "integer", "x-spark-type": "LongType",   "x-neo4j-type": "INTEGER" },
+        "reg_hispanic":                   { "type": "integer", "x-spark-type": "LongType",   "x-neo4j-type": "INTEGER" },
+        "reg_black":                      { "type": "integer", "x-spark-type": "LongType",   "x-neo4j-type": "INTEGER" },
+        "reg_asian":                      { "type": "integer", "x-spark-type": "LongType",   "x-neo4j-type": "INTEGER" },
+        "gen2022_voted":                  { "type": "integer", "x-spark-type": "LongType",   "x-neo4j-type": "INTEGER" },
+        "gen2022_turnout_pct":            { "type": "number",  "x-spark-type": "DoubleType", "x-neo4j-type": "FLOAT" },
+        "gen2022_voted_white":            { "type": "integer", "x-spark-type": "LongType",   "x-neo4j-type": "INTEGER" },
+        "gen2022_voted_hispanic":         { "type": "integer", "x-spark-type": "LongType",   "x-neo4j-type": "INTEGER" },
+        "gen2022_voted_black":            { "type": "integer", "x-spark-type": "LongType",   "x-neo4j-type": "INTEGER" },
+        "gen2022_voted_asian":            { "type": "integer", "x-spark-type": "LongType",   "x-neo4j-type": "INTEGER" },
+        "gen2022_turnout_pct_white":      { "type": "number",  "x-spark-type": "DoubleType", "x-neo4j-type": "FLOAT" },
+        "gen2022_turnout_pct_hispanic":   { "type": "number",  "x-spark-type": "DoubleType", "x-neo4j-type": "FLOAT" },
+        "gen2022_turnout_pct_black":      { "type": "number",  "x-spark-type": "DoubleType", "x-neo4j-type": "FLOAT" },
+        "gen2022_turnout_pct_asian":      { "type": "number",  "x-spark-type": "DoubleType", "x-neo4j-type": "FLOAT" },
+        "gen2022_voted_male":             { "type": "integer", "x-spark-type": "LongType",   "x-neo4j-type": "INTEGER" },
+        "gen2022_voted_female":           { "type": "integer", "x-spark-type": "LongType",   "x-neo4j-type": "INTEGER" },
+        "gen2022_turnout_pct_male":       { "type": "number",  "x-spark-type": "DoubleType", "x-neo4j-type": "FLOAT" },
+        "gen2022_turnout_pct_female":     { "type": "number",  "x-spark-type": "DoubleType", "x-neo4j-type": "FLOAT" }
+      },
+      "required": ["geoid"]
+    },
+
+    "precinct_entities": {
+      "allOf": [{ "$ref": "#/$defs/entityBase" }],
+      "x-label": "Precinct",
+      "x-kind": "entity",
+      "x-description": "Voting precincts with election results",
+      "properties": {
+        "geoid":             { "type": "string" },
+        "state":             { "type": "string" },
+        "state_fips":        { "type": "string" },
+        "county_fips":       { "type": "string" },
+        "precinct_id":       { "type": "string" },
+        "votes_dem":         { "type": "integer", "x-spark-type": "IntegerType", "x-neo4j-type": "INTEGER" },
+        "votes_rep":         { "type": "integer", "x-spark-type": "IntegerType", "x-neo4j-type": "INTEGER" },
+        "votes_total":       { "type": "integer", "x-spark-type": "IntegerType", "x-neo4j-type": "INTEGER" },
+        "pct_dem_lead":      { "type": "number",  "x-spark-type": "DoubleType",  "x-neo4j-type": "FLOAT" },
+        "official_boundary": { "type": "boolean", "x-spark-type": "BooleanType", "x-neo4j-type": "BOOLEAN" }
+      },
+      "required": []
+    },
+
+    "catalog_meta_entities": {
+      "allOf": [{ "$ref": "#/$defs/entityBase" }],
+      "x-label": "CatalogMeta",
+      "x-kind": "entity",
+      "x-description": "Meta-entity representing a Unity Catalog catalog",
+      "properties": {
+        "name":        { "type": "string" },
+        "table_count": { "type": "integer", "x-spark-type": "IntegerType", "x-neo4j-type": "INTEGER" },
+        "total_rows":  { "type": "integer", "x-spark-type": "LongType",    "x-neo4j-type": "INTEGER" }
+      },
+      "required": ["name"]
+    },
+
+    "table_meta_entities": {
+      "allOf": [{ "$ref": "#/$defs/entityBase" }],
+      "x-label": "TableMeta",
+      "x-kind": "entity",
+      "x-description": "Meta-entity representing a quicksilver table within a catalog",
+      "properties": {
+        "catalog":                       { "type": "string" },
+        "tier":                          { "type": "string" },
+        "table_name":                    { "type": "string" },
+        "row_count":                     { "type": "integer", "x-spark-type": "LongType",    "x-neo4j-type": "INTEGER" },
+        "column_count":                  { "type": "integer", "x-spark-type": "IntegerType", "x-neo4j-type": "INTEGER" },
+        "duplicate_ids":                 { "type": "integer", "x-spark-type": "LongType",    "x-neo4j-type": "INTEGER" },
+        "incatalog_orphan_src_count":    { "type": "integer", "x-spark-type": "LongType",    "x-neo4j-type": "INTEGER" },
+        "incatalog_orphan_src_pct":      { "type": "number",  "x-spark-type": "DoubleType",  "x-neo4j-type": "FLOAT" },
+        "incatalog_orphan_dst_count":    { "type": "integer", "x-spark-type": "LongType",    "x-neo4j-type": "INTEGER" },
+        "incatalog_orphan_dst_pct":      { "type": "number",  "x-spark-type": "DoubleType",  "x-neo4j-type": "FLOAT" },
+        "crosscatalog_orphan_src_count": { "type": "integer", "x-spark-type": "LongType",    "x-neo4j-type": "INTEGER" },
+        "crosscatalog_orphan_src_pct":   { "type": "number",  "x-spark-type": "DoubleType",  "x-neo4j-type": "FLOAT" },
+        "crosscatalog_orphan_dst_count": { "type": "integer", "x-spark-type": "LongType",    "x-neo4j-type": "INTEGER" },
+        "crosscatalog_orphan_dst_pct":   { "type": "number",  "x-spark-type": "DoubleType",  "x-neo4j-type": "FLOAT" },
+        "table_type":                    { "type": "string" }
+      },
+      "required": ["catalog", "tier", "table_name"]
+    },
+
+    "field_meta_entities": {
+      "allOf": [{ "$ref": "#/$defs/entityBase" }],
+      "x-label": "FieldMeta",
+      "x-kind": "entity",
+      "x-description": "Meta-entity representing a field across catalogs",
+      "properties": {
+        "table_type":    { "type": "string" },
+        "field_name":    { "type": "string" },
+        "data_type":     { "type": "string" },
+        "is_required":   { "type": "boolean", "x-spark-type": "BooleanType", "x-neo4j-type": "BOOLEAN" },
+        "catalog_count": { "type": "integer", "x-spark-type": "IntegerType", "x-neo4j-type": "INTEGER" },
+        "catalogs":      { "type": "string" }
+      },
+      "required": ["table_type", "field_name"]
+    },
+
+    "source_id_entities": {
+      "allOf": [{ "$ref": "#/$defs/entityBase" }],
+      "x-label": "SourceId",
+      "x-kind": "entity",
+      "x-description": "Source-specific identifier entities for cross-catalog resolution",
+      "properties": {
+        "id_type":         { "type": "string" },
+        "id_value":        { "type": "string" },
+        "candidate_count": { "type": "integer", "x-spark-type": "LongType", "x-neo4j-type": "INTEGER" },
+        "catalog_count":   { "type": "integer", "x-spark-type": "LongType", "x-neo4j-type": "INTEGER" }
+      },
+      "required": ["id_type", "id_value"]
+    },
+
+    "candidate_name_vertices": {
+      "allOf": [{ "$ref": "#/$defs/entityBase" }],
+      "x-label": "CandidateNameVertex",
+      "x-kind": "entity",
+      "x-description": "Name-match vertices for candidate entity resolution",
+      "properties": {
+        "name_field":       { "type": "string" },
+        "normalized_value": { "type": "string" },
+        "candidate_count":  { "type": "integer", "x-spark-type": "LongType", "x-neo4j-type": "INTEGER" },
+        "catalog_count":    { "type": "integer", "x-spark-type": "LongType", "x-neo4j-type": "INTEGER" }
+      },
+      "required": ["name_field", "normalized_value"]
+    },
+
+    "committee_name_vertices": {
+      "allOf": [{ "$ref": "#/$defs/entityBase" }],
+      "x-label": "CommitteeNameVertex",
+      "x-kind": "entity",
+      "x-description": "Name-match vertices for committee entity resolution",
+      "properties": {
+        "normalized_name":  { "type": "string" },
+        "committee_count":  { "type": "integer", "x-spark-type": "LongType", "x-neo4j-type": "INTEGER" },
+        "catalog_count":    { "type": "integer", "x-spark-type": "LongType", "x-neo4j-type": "INTEGER" }
+      },
+      "required": ["normalized_name"]
+    },
+
+    "candidate_state_edges":        { "allOf": [{ "$ref": "#/$defs/edgeBase" }], "x-kind": "edge", "x-rel-type": "IN_STATE",      "x-src": "Candidate",     "x-dst": "State",               "properties": {} },
+    "candidate_place_edges":        { "allOf": [{ "$ref": "#/$defs/edgeBase" }], "x-kind": "edge", "x-rel-type": "IN_PLACE",      "x-src": "Candidate",     "x-dst": "Place",               "properties": {} },
+    "candidate_zip_edges":          { "allOf": [{ "$ref": "#/$defs/edgeBase" }], "x-kind": "edge", "x-rel-type": "IN_ZIP",        "x-src": "Candidate",     "x-dst": "PostalCode",          "properties": {} },
+    "candidate_county_edges":       { "allOf": [{ "$ref": "#/$defs/edgeBase" }], "x-kind": "edge", "x-rel-type": "IN_COUNTY",     "x-src": "Candidate",     "x-dst": "County",              "properties": {} },
+    "candidate_district_edges":     { "allOf": [{ "$ref": "#/$defs/edgeBase" }], "x-kind": "edge", "x-rel-type": "IN_DISTRICT",   "x-src": "Candidate",     "x-dst": "District",            "properties": {} },
+    "candidate_officeholder_edges": { "allOf": [{ "$ref": "#/$defs/edgeBase" }], "x-kind": "edge", "x-rel-type": "SAME_AS",       "x-src": "Candidate",     "x-dst": "Officeholder",        "properties": {} },
+    "candidate_source_id_edges":    { "allOf": [{ "$ref": "#/$defs/edgeBase" }], "x-kind": "edge", "x-rel-type": "HAS_SOURCE_ID", "x-src": "Candidate",     "x-dst": "SourceId",            "properties": {} },
+    "candidate_name_edges":         { "allOf": [{ "$ref": "#/$defs/edgeBase" }], "x-kind": "edge", "x-rel-type": "HAS_NAME",      "x-src": "Candidate",     "x-dst": "CandidateNameVertex", "properties": {} },
+
+    "committee_name_edges": {
+      "allOf": [{ "$ref": "#/$defs/edgeBase" }],
+      "x-kind": "edge",
+      "x-rel-type": "HAS_NAME",
+      "x-src": "Committee",
+      "x-dst": "CommitteeNameVertex",
+      "properties": {
+        "fec_committee_id":    { "type": "string" },
+        "tec_filer_id":        { "type": "string" },
+        "fl_doe_acct_num":     { "type": "string" },
+        "az_sos_committee_id": { "type": "string" },
+        "wa_pdc_filer_id":     { "type": "string" },
+        "me_ethics_org_id":    { "type": "string" }
+      }
+    },
+
+    "individual_committee_edges": {
+      "allOf": [{ "$ref": "#/$defs/edgeBase" }],
+      "x-kind": "edge",
+      "x-rel-type": "CONTRIBUTED_TO",
+      "x-src": "Individual",
+      "x-dst": "Committee",
+      "properties": {
+        "total_amount":        { "type": "number",  "x-spark-type": "DoubleType", "x-neo4j-type": "FLOAT" },
+        "contribution_count":  { "type": "integer", "x-spark-type": "LongType",   "x-neo4j-type": "INTEGER" },
+        "first_contribution":  { "type": "string",  "format": "date", "x-spark-type": "DateType", "x-neo4j-type": "DATE" },
+        "last_contribution":   { "type": "string",  "format": "date", "x-spark-type": "DateType", "x-neo4j-type": "DATE" },
+        "transaction_types":   { "type": "string" },
+        "cycles":              { "type": "string" }
+      }
+    },
+
+    "committee_vendor_edges": {
+      "allOf": [{ "$ref": "#/$defs/edgeBase" }],
+      "x-kind": "edge",
+      "x-rel-type": "PAID",
+      "x-src": "Committee",
+      "x-dst": "Vendor",
+      "properties": {
+        "total_amount":  { "type": "number",  "x-spark-type": "DoubleType", "x-neo4j-type": "FLOAT" },
+        "payment_count": { "type": "integer", "x-spark-type": "LongType",   "x-neo4j-type": "INTEGER" },
+        "purposes":      { "type": "string" },
+        "categories":    { "type": "string" },
+        "expn_desc":     { "type": "string" },
+        "first_payment": { "type": "string", "format": "date", "x-spark-type": "DateType", "x-neo4j-type": "DATE" },
+        "last_payment":  { "type": "string", "format": "date", "x-spark-type": "DateType", "x-neo4j-type": "DATE" },
+        "cycles":        { "type": "string" }
+      }
+    },
+
+    "committee_candidate_edges": {
+      "allOf": [{ "$ref": "#/$defs/edgeBase" }],
+      "x-kind": "edge",
+      "x-rel-type": "SUPPORTS",
+      "x-src": "Committee",
+      "x-dst": "Candidate",
+      "properties": {
+        "committee_name": { "type": "string" },
+        "candidate_name": { "type": "string" },
+        "state":          { "type": "string" },
+        "jurisdiction":   { "type": "string" }
+      }
+    },
+
+    "committee_committee_edges": {
+      "allOf": [{ "$ref": "#/$defs/edgeBase" }],
+      "x-kind": "edge",
+      "x-rel-type": "TRANSFERRED_TO",
+      "x-src": "Committee",
+      "x-dst": "Committee",
+      "properties": {
+        "total_amount":      { "type": "number",  "x-spark-type": "DoubleType", "x-neo4j-type": "FLOAT" },
+        "transaction_count": { "type": "integer", "x-spark-type": "LongType",   "x-neo4j-type": "INTEGER" },
+        "first_transaction": { "type": "string",  "format": "date", "x-spark-type": "DateType", "x-neo4j-type": "DATE" },
+        "last_transaction":  { "type": "string",  "format": "date", "x-spark-type": "DateType", "x-neo4j-type": "DATE" },
+        "cycles":            { "type": "string" }
+      }
+    },
+
+    "individual_employer_edges": {
+      "allOf": [{ "$ref": "#/$defs/edgeBase" }],
+      "x-kind": "edge",
+      "x-rel-type": "EMPLOYED_BY",
+      "x-src": "Individual",
+      "x-dst": "Employer",
+      "properties": {
+        "occupation":   { "type": "string" },
+        "record_count": { "type": "integer", "x-spark-type": "LongType", "x-neo4j-type": "INTEGER" },
+        "first_seen":   { "type": "string",  "format": "date", "x-spark-type": "DateType", "x-neo4j-type": "DATE" },
+        "last_seen":    { "type": "string",  "format": "date", "x-spark-type": "DateType", "x-neo4j-type": "DATE" },
+        "cycles":       { "type": "string" }
+      }
+    },
+
+    "individual_place_edges": {
+      "allOf": [{ "$ref": "#/$defs/edgeBase" }],
+      "x-kind": "edge",
+      "x-rel-type": "RESIDES_IN",
+      "x-src": "Individual",
+      "x-dst": "Place",
+      "properties": {
+        "cycles": { "type": "string" }
+      }
+    },
+
+    "individual_postalcode_edges": {
+      "allOf": [{ "$ref": "#/$defs/edgeBase" }],
+      "x-kind": "edge",
+      "x-rel-type": "IN_ZIP",
+      "x-src": "Individual",
+      "x-dst": "PostalCode",
+      "properties": {
+        "cycles": { "type": "string" }
+      }
+    },
+
+    "candidate_party_edges": { "allOf": [{ "$ref": "#/$defs/edgeBase" }], "x-kind": "edge", "x-rel-type": "AFFILIATED_WITH", "x-src": "Candidate", "x-dst": "Party", "properties": {} },
+
+    "candidate_cycle_edges": {
+      "allOf": [{ "$ref": "#/$defs/edgeBase" }],
+      "x-kind": "edge",
+      "x-rel-type": "RAN_IN_CYCLE",
+      "x-src": "Candidate",
+      "x-dst": "Cycle",
+      "properties": {
+        "fec_candidate_id":            { "type": "string" },
+        "cycle_year":                  { "type": "integer", "x-spark-type": "IntegerType", "x-neo4j-type": "INTEGER" },
+        "election_year":               { "type": "integer", "x-spark-type": "IntegerType", "x-neo4j-type": "INTEGER" },
+        "office":                      { "type": "string" },
+        "office_state":                { "type": "string" },
+        "office_district":             { "type": "string" },
+        "incumbent_challenger_status": { "type": "string" },
+        "candidate_status":            { "type": "string" },
+        "party_affiliation":           { "type": "string" }
+      }
+    },
+
+    "candidate_office_edges": {
+      "allOf": [{ "$ref": "#/$defs/edgeBase" }],
+      "x-kind": "edge",
+      "x-rel-type": "RAN_FOR",
+      "x-src": "Candidate",
+      "x-dst": "Office",
+      "properties": {
+        "fec_candidate_id":            { "type": "string" },
+        "election_year":               { "type": "integer", "x-spark-type": "IntegerType", "x-neo4j-type": "INTEGER" },
+        "incumbent_challenger_status": { "type": "string" },
+        "candidate_status":            { "type": "string" },
+        "cycle":                       { "type": "integer", "x-spark-type": "IntegerType", "x-neo4j-type": "INTEGER" },
+        "bioguide_id":                 { "type": "string" },
+        "office_type":                 { "type": "string" },
+        "state":                       { "type": "string" },
+        "district":                    { "type": "string" }
+      }
+    },
+
+    "committee_cycle_edges": {
+      "allOf": [{ "$ref": "#/$defs/edgeBase" }],
+      "x-kind": "edge",
+      "x-rel-type": "ACTIVE_IN_CYCLE",
+      "x-src": "Committee",
+      "x-dst": "Cycle",
+      "properties": {
+        "fec_committee_id":      { "type": "string" },
+        "cycle_year":            { "type": "integer", "x-spark-type": "IntegerType", "x-neo4j-type": "INTEGER" },
+        "committee_type":        { "type": "string" },
+        "committee_designation": { "type": "string" },
+        "party_affiliation":     { "type": "string" },
+        "filing_frequency":      { "type": "string" },
+        "organization_type":     { "type": "string" },
+        "linked_candidate_id":   { "type": "string" }
+      }
+    },
+
+    "officeholder_district_edges": {
+      "allOf": [{ "$ref": "#/$defs/edgeBase" }],
+      "x-kind": "edge",
+      "x-rel-type": "REPRESENTED",
+      "x-src": "Officeholder",
+      "x-dst": "District",
+      "properties": {
+        "bioguide_id": { "type": "string" },
+        "congresses":  { "type": "string" },
+        "party":       { "type": "string" },
+        "start_year":  { "type": "string" },
+        "end_year":    { "type": "string" }
+      }
+    },
+
+    "officeholder_state_edges": {
+      "allOf": [{ "$ref": "#/$defs/edgeBase" }],
+      "x-kind": "edge",
+      "x-rel-type": "REPRESENTED",
+      "x-src": "Officeholder",
+      "x-dst": "State",
+      "properties": {
+        "bioguide_id": { "type": "string" },
+        "congresses":  { "type": "string" },
+        "party":       { "type": "string" },
+        "start_year":  { "type": "string" },
+        "end_year":    { "type": "string" }
+      }
+    },
+
+    "officeholder_race_edges": {
+      "allOf": [{ "$ref": "#/$defs/edgeBase" }],
+      "x-kind": "edge",
+      "x-rel-type": "COMPETED_IN",
+      "x-src": "Officeholder",
+      "x-dst": "Race",
+      "properties": {
+        "bioguide_id":   { "type": "string" },
+        "election_year": { "type": "integer", "x-spark-type": "IntegerType", "x-neo4j-type": "INTEGER" },
+        "congress":      { "type": "integer", "x-spark-type": "LongType",    "x-neo4j-type": "INTEGER" },
+        "party":         { "type": "string" }
+      }
+    },
+
+    "officeholder_office_edges": {
+      "allOf": [{ "$ref": "#/$defs/edgeBase" }],
+      "x-kind": "edge",
+      "x-rel-type": "HELD",
+      "x-src": "Officeholder",
+      "x-dst": "Office",
+      "properties": {
+        "office_type":   { "type": "string" },
+        "state":         { "type": "string" },
+        "district":      { "type": "string" },
+        "party":         { "type": "string" },
+        "election_year": { "type": "integer", "x-spark-type": "IntegerType", "x-neo4j-type": "INTEGER" }
+      }
+    },
+
+    "candidate_race_edges": {
+      "allOf": [{ "$ref": "#/$defs/edgeBase" }],
+      "x-kind": "edge",
+      "x-rel-type": "COMPETED_IN",
+      "x-src": "Candidate",
+      "x-dst": "Race",
+      "properties": {
+        "bioguide_id":   { "type": "string" },
+        "election_year": { "type": "integer", "x-spark-type": "IntegerType", "x-neo4j-type": "INTEGER" },
+        "congress":      { "type": "integer", "x-spark-type": "LongType",    "x-neo4j-type": "INTEGER" }
+      }
+    },
+
+    "race_office_edges": {
+      "allOf": [{ "$ref": "#/$defs/edgeBase" }],
+      "x-kind": "edge",
+      "x-rel-type": "FOR_OFFICE",
+      "x-src": "Race",
+      "x-dst": "Office",
+      "properties": {
+        "office_type": { "type": "string" },
+        "state":       { "type": "string" },
+        "district":    { "type": "string" }
+      }
+    },
+
+    "race_state_edges": {
+      "allOf": [{ "$ref": "#/$defs/edgeBase" }],
+      "x-kind": "edge",
+      "x-rel-type": "IN_STATE",
+      "x-src": "Race",
+      "x-dst": "State",
+      "properties": {
+        "state":         { "type": "string" },
+        "election_year": { "type": "integer", "x-spark-type": "IntegerType", "x-neo4j-type": "INTEGER" }
+      }
+    },
+
+    "race_cycle_edges": {
+      "allOf": [{ "$ref": "#/$defs/edgeBase" }],
+      "x-kind": "edge",
+      "x-rel-type": "IN_CYCLE",
+      "x-src": "Race",
+      "x-dst": "Cycle",
+      "properties": {
+        "election_year": { "type": "integer", "x-spark-type": "IntegerType", "x-neo4j-type": "INTEGER" }
+      }
+    },
+
+    "county_state_edges":    { "allOf": [{ "$ref": "#/$defs/edgeBase" }], "x-kind": "edge", "x-rel-type": "IN_STATE",  "x-src": "County",   "x-dst": "State",  "properties": {} },
+    "district_state_edges":  { "allOf": [{ "$ref": "#/$defs/edgeBase" }], "x-kind": "edge", "x-rel-type": "IN_STATE",  "x-src": "District", "x-dst": "State",  "properties": {} },
+
+    "district_county_edges": {
+      "allOf": [{ "$ref": "#/$defs/edgeBase" }],
+      "x-kind": "edge",
+      "x-rel-type": "OVERLAPS",
+      "x-src": "District",
+      "x-dst": "County",
+      "properties": {
+        "overlap_land_area":  { "type": "integer", "x-spark-type": "LongType", "x-neo4j-type": "INTEGER" },
+        "overlap_water_area": { "type": "integer", "x-spark-type": "LongType", "x-neo4j-type": "INTEGER" }
+      }
+    },
+
+    "district_place_edges": {
+      "allOf": [{ "$ref": "#/$defs/edgeBase" }],
+      "x-kind": "edge",
+      "x-rel-type": "OVERLAPS",
+      "x-src": "District",
+      "x-dst": "Place",
+      "properties": {
+        "overlap_land_area":  { "type": "integer", "x-spark-type": "LongType", "x-neo4j-type": "INTEGER" },
+        "overlap_water_area": { "type": "integer", "x-spark-type": "LongType", "x-neo4j-type": "INTEGER" }
+      }
+    },
+
+    "tract_state_edges":  { "allOf": [{ "$ref": "#/$defs/edgeBase" }], "x-kind": "edge", "x-rel-type": "IN_STATE",  "x-src": "Tract", "x-dst": "State",  "properties": {} },
+    "tract_county_edges": { "allOf": [{ "$ref": "#/$defs/edgeBase" }], "x-kind": "edge", "x-rel-type": "IN_COUNTY", "x-src": "Tract", "x-dst": "County", "properties": {} },
+
+    "tract_district_edges": {
+      "allOf": [{ "$ref": "#/$defs/edgeBase" }],
+      "x-kind": "edge",
+      "x-rel-type": "OVERLAPS",
+      "x-src": "Tract",
+      "x-dst": "District",
+      "properties": {
+        "overlap_land_area": { "type": "integer", "x-spark-type": "LongType", "x-neo4j-type": "INTEGER" }
+      }
+    },
+
+    "place_state_edges": { "allOf": [{ "$ref": "#/$defs/edgeBase" }], "x-kind": "edge", "x-rel-type": "IN_STATE", "x-src": "Place", "x-dst": "State", "properties": {} },
+
+    "postalcode_district_edges": {
+      "allOf": [{ "$ref": "#/$defs/edgeBase" }],
+      "x-kind": "edge",
+      "x-rel-type": "OVERLAPS",
+      "x-src": "PostalCode",
+      "x-dst": "District",
+      "properties": {
+        "overlap_land_area":  { "type": "integer", "x-spark-type": "LongType", "x-neo4j-type": "INTEGER" },
+        "overlap_water_area": { "type": "integer", "x-spark-type": "LongType", "x-neo4j-type": "INTEGER" }
+      }
+    },
+
+    "datasource_catalog_edges": { "allOf": [{ "$ref": "#/$defs/edgeBase" }], "x-kind": "edge", "x-rel-type": "HAS_CATALOG", "x-src": "CatalogMeta", "x-dst": "CatalogMeta", "properties": {} },
+    "catalog_table_edges":      { "allOf": [{ "$ref": "#/$defs/edgeBase" }], "x-kind": "edge", "x-rel-type": "HAS_TABLE",   "x-src": "CatalogMeta", "x-dst": "TableMeta",   "properties": {} },
+
+    "table_field_edges": {
+      "allOf": [{ "$ref": "#/$defs/edgeBase" }],
+      "x-kind": "edge",
+      "x-rel-type": "HAS_FIELD",
+      "x-src": "TableMeta",
+      "x-dst": "FieldMeta",
+      "properties": {
+        "with_value":     { "type": "integer", "x-spark-type": "LongType",   "x-neo4j-type": "INTEGER" },
+        "null_value":     { "type": "integer", "x-spark-type": "LongType",   "x-neo4j-type": "INTEGER" },
+        "distinct_count": { "type": "integer", "x-spark-type": "LongType",   "x-neo4j-type": "INTEGER" },
+        "fill_rate":      { "type": "number",  "x-spark-type": "DoubleType", "x-neo4j-type": "FLOAT" }
+      }
+    }
+  },
+
+  "x-resolution-rules": [
+    {
+      "pattern": "^civitech_com_voter_[a-z]{2}_(.+)$",
+      "mappings": { "entities": "voter_entities" },
+      "description": "Civitech per-state voter tables resolve to the base voter_entities schema"
+    }
+  ],
+
+  "x-registry-order": [
+    "candidate_entities", "committee_entities", "individual_entities", "vendor_entities",
+    "employer_entities", "company_entities", "office_entities", "office_candidate_stats",
+    "party_entities", "cycle_entities", "officeholder_entities", "race_entities",
+    "state_entities", "county_entities", "district_entities", "place_entities",
+    "postalcode_entities", "tract_entities", "block_entities", "precinct_entities",
+    "source_id_entities", "candidate_name_vertices", "committee_name_vertices",
+    "candidate_state_edges", "candidate_place_edges", "candidate_zip_edges",
+    "candidate_county_edges", "candidate_district_edges", "candidate_officeholder_edges",
+    "candidate_source_id_edges", "candidate_name_edges", "committee_name_edges",
+    "individual_committee_edges", "individual_employer_edges", "individual_place_edges",
+    "individual_postalcode_edges", "committee_committee_edges", "committee_vendor_edges",
+    "committee_candidate_edges", "candidate_party_edges",
+    "candidate_cycle_edges", "candidate_office_edges", "committee_cycle_edges",
+    "officeholder_district_edges", "officeholder_state_edges", "officeholder_race_edges",
+    "officeholder_office_edges", "candidate_race_edges",
+    "race_office_edges", "race_state_edges", "race_cycle_edges",
+    "county_state_edges", "district_state_edges", "district_county_edges",
+    "district_place_edges", "tract_state_edges", "tract_county_edges",
+    "tract_district_edges", "place_state_edges", "postalcode_district_edges",
+    "voter_entities",
+    "catalog_meta_entities", "table_meta_entities", "field_meta_entities",
+    "datasource_catalog_edges", "catalog_table_edges", "table_field_edges"
+  ],
+
+  "x-neo4j-limitations": [
+    "Neo4j 5 cannot constrain edge endpoints — (Individual)-[PAID]->(Individual) is technically allowed even though the schema says PAID goes Committee->Vendor",
+    "Enforce endpoint constraints at write time via application code or APOC triggers",
+    "Node/relationship type constraints are union-style — one constraint must list ALL permitted labels/types"
+  ]
+}
