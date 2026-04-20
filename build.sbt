@@ -19,19 +19,9 @@ lazy val root = (project in file("."))
       "org.apache.spark" %% "spark-sql" % sparkVersion % Provided
     ),
 
-    // Auto-generate Scala model from metamodel JSON before compile
-    Compile / sourceGenerators += Def.task {
-      import scala.sys.process._
-      val log = streams.value.log
-      val base = baseDirectory.value
-      val cmd = Seq("node", (base / "scripts" / "generate-model.js").getPath)
-      log.info("Generating info.elect.model from quicksilver-metamodel.json...")
-      val rc = Process(cmd, base).!
-      if (rc != 0) sys.error("generate-model.js failed")
-      // Return the generated .scala files so sbt tracks them
-      val modelDir = base / "src" / "main" / "scala" / "info" / "elect" / "model"
-      (modelDir ** "*.scala").get
-    }.taskValue,
+    // Generated Scala model files are committed to git.
+    // Freshness is verified by CI via: npm run generate:scala:check
+    // To regenerate locally: npm run generate:scala
 
     // Publish to Nexus
     publishTo := Some("Nexus" at "https://repo.elect.info/repository/maven-snapshots/"),
