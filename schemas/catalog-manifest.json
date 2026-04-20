@@ -422,7 +422,18 @@
       "Block",
       "Precinct"
     ],
-    "edges": []
+    "edges": [
+      {
+        "relationship": "IN_COUNTY",
+        "src_type": "Block",
+        "dst_type": "County"
+      },
+      {
+        "relationship": "PART_OF",
+        "src_type": "Block",
+        "dst_type": "Tract"
+      }
+    ]
   },
   "ethics.state.tx.us": {
     "catalog": "tec",
