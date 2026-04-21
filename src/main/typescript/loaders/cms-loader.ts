@@ -9,13 +9,13 @@
  */
 
 import type {
-  Candidate,
+  Politician,
   Committee,
   Individual,
   EntityType,
 } from '../types/entities';
 import type {
-  CandidateMerged,
+  PoliticianMerged,
   CommitteeMerged,
   IndividualMerged,
 } from '../types/cms-merged';
@@ -131,23 +131,23 @@ export class CMSLoader {
   }
 
   /**
-   * Fetch candidate data from GraphQL
+   * Fetch politician data from GraphQL
    */
-  private async fetchCandidateFromGraphQL(id: string): Promise<Candidate | null> {
-    const cacheKey = `graphql:candidate:${id}`;
-    const cached = this.cache?.get<Candidate>(cacheKey);
+  private async fetchPoliticianFromGraphQL(id: string): Promise<Politician | null> {
+    const cacheKey = `graphql:politician:${id}`;
+    const cached = this.cache?.get<Politician>(cacheKey);
     if (cached) return cached;
 
     try {
-      const response = await this.fetchWithTimeout<GraphQLResponse<Candidate>>(
+      const response = await this.fetchWithTimeout<GraphQLResponse<Politician>>(
         this.config.graphqlEndpoint,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             query: `
-              query getCandidateById($id: String!) {
-                candidateById(id: $id) {
+              query getPoliticianById($id: String!) {
+                politicianById(id: $id) {
                   id
                   fecId
                   name
@@ -169,28 +169,28 @@ export class CMSLoader {
         },
       );
 
-      const candidate = (response?.data?.candidateById as Candidate) || null;
-      if (candidate) {
-        this.cache?.set(cacheKey, candidate);
+      const politician = (response?.data?.politicianById as Politician) || null;
+      if (politician) {
+        this.cache?.set(cacheKey, politician);
       }
-      return candidate;
+      return politician;
     } catch (error) {
-      console.error(`Failed to fetch candidate ${id} from GraphQL:`, error);
+      console.error(`Failed to fetch politician ${id} from GraphQL:`, error);
       return null;
     }
   }
 
   /**
-   * Fetch candidate data from Payload CMS
+   * Fetch politician data from Payload CMS
    */
-  private async fetchCandidateFromCMS(id: string): Promise<any | null> {
-    const cacheKey = `cms:candidate:${id}`;
+  private async fetchPoliticianFromCMS(id: string): Promise<any | null> {
+    const cacheKey = `cms:politician:${id}`;
     const cached = this.cache?.get(cacheKey);
     if (cached) return cached;
 
     try {
       const response = await this.fetchWithTimeout<PayloadResponse<any>>(
-        `${this.config.cmsEndpoint}/candidates?where[fec_id][equals]=${encodeURIComponent(id)}`,
+        `${this.config.cmsEndpoint}/politicians?where[fec_id][equals]=${encodeURIComponent(id)}`,
       );
 
       const doc = response?.docs?.[0] || null;
@@ -199,7 +199,7 @@ export class CMSLoader {
       }
       return doc;
     } catch (error) {
-      console.error(`Failed to fetch candidate ${id} from CMS:`, error);
+      console.error(`Failed to fetch politician ${id} from CMS:`, error);
       return null;
     }
   }
@@ -276,15 +276,15 @@ export class CMSLoader {
   }
 
   /**
-   * Get merged candidate data
+   * Get merged politician data
    */
-  async getCandidate(
+  async getPolitician(
     id: string,
     options: MergeOptions = {},
-  ): Promise<CandidateMerged | null> {
+  ): Promise<PoliticianMerged | null> {
     const [graphqlData, cmsData] = await Promise.all([
-      this.fetchCandidateFromGraphQL(id),
-      this.fetchCandidateFromCMS(id),
+      this.fetchPoliticianFromGraphQL(id),
+      this.fetchPoliticianFromCMS(id),
     ]);
 
     if (!graphqlData) return null;
@@ -303,7 +303,7 @@ export class CMSLoader {
     }
 
     // Merge data
-    const merged: CandidateMerged = {
+    const merged: PoliticianMerged = {
       ...graphqlData,
       ...(cmsData && {
         cmsId: cmsData.id,

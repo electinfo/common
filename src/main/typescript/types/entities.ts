@@ -4,14 +4,14 @@
  */
 
 // ============================================================================
-// CANDIDATES
+// POLITICIANS
 // ============================================================================
 
 /**
- * Candidate - Federal election candidate
- * Matches Neo4j :Candidate node and GraphQL Query.candidates response
+ * Politician - Federal election candidate and office holder
+ * Matches Neo4j :Politician node and GraphQL Query.politicians response
  */
-export interface Candidate {
+export interface Politician {
   // Core identifiers
   id: string; // Neo4j node ID
   fecId: string; // FEC candidate ID (unique)
@@ -390,13 +390,13 @@ export interface DataSource {
 /**
  * Any entity type that can have a description in the CMS
  */
-export type CmsEntity = Candidate | CodeSource | Committee | DataSource | Individual;
+export type CmsEntity = Politician | CodeSource | Committee | DataSource | Individual;
 
 /**
  * All entity types
  */
 export type AnyEntity =
-  | Candidate
+  | Politician
   | CodeSource
   | Committee
   | DataSource
@@ -412,7 +412,7 @@ export type AnyEntity =
  * Entity type enumeration
  */
 export enum EntityType {
-  CANDIDATE = 'candidate',
+  POLITICIAN = 'politician',
   CODE_SOURCE = 'code-source',
   COMMITTEE = 'committee',
   DATA_SOURCE = 'data-source',
@@ -427,9 +427,9 @@ export enum EntityType {
 }
 
 /**
- * Type guard to check if entity is a Candidate
+ * Type guard to check if entity is a Politician
  */
-export function isCandidate(entity: any): entity is Candidate {
+export function isPolitician(entity: any): entity is Politician {
   return entity && 'office' in entity && ['president', 'senate', 'house'].includes(entity.office);
 }
 
@@ -465,7 +465,7 @@ export function isIndividual(entity: any): entity is Individual {
  * Get entity type from an entity object
  */
 export function getEntityType(entity: any): EntityType | null {
-  if (isCandidate(entity)) return EntityType.CANDIDATE;
+  if (isPolitician(entity)) return EntityType.POLITICIAN;
   if (isCodeSource(entity)) return EntityType.CODE_SOURCE;
   if (isCommittee(entity)) return EntityType.COMMITTEE;
   if (isDataSource(entity)) return EntityType.DATA_SOURCE;

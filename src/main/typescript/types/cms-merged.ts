@@ -7,12 +7,12 @@
  * - Payload CMS (editorial enrichment)
  */
 
-import type { Candidate, Committee, Individual } from './entities';
+import type { Politician, Committee, Individual } from './entities';
 
 /**
- * CMS Candidate: Extends Neo4j Candidate with editorial enrichment
+ * CMS Politician: Extends Neo4j Politician with editorial enrichment
  */
-export interface CandidateMerged extends Candidate {
+export interface PoliticianMerged extends Politician {
   // CMS Editorial Fields
   cmsId?: string; // Payload document ID
   description?: string; // Rich text biography/description
@@ -92,9 +92,9 @@ export interface IndividualMerged extends Individual {
 }
 
 /**
- * Type guard for CandidateMerged
+ * Type guard for PoliticianMerged
  */
-export function isCandidateMerged(entity: unknown): entity is CandidateMerged {
+export function isPoliticianMerged(entity: unknown): entity is PoliticianMerged {
   return (
     typeof entity === 'object' &&
     entity !== null &&

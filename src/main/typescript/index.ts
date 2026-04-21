@@ -14,7 +14,7 @@ export { urlPatterns, constants, entityTypesSchema, partyCodesSchema, stateCodes
 
 // Re-export entity types
 export type {
-  Candidate,
+  Politician,
   CodeSource,
   Committee,
   DataSource,
@@ -36,7 +36,7 @@ export {
   DataType,
   DataTypeLabels,
   EntityType,
-  isCandidate,
+  isPolitician,
   isCodeSource,
   isCommittee,
   isDataSource,
@@ -46,7 +46,7 @@ export {
 
 // Type definitions
 export interface UrlPatternConfig {
-  candidate: {
+  politician: {
     president: (slug: string) => string;
     senate: (state: string, slug: string) => string;
     house: (state: string, district: string, slug: string) => string;
@@ -63,12 +63,12 @@ export interface UrlPatternConfig {
 
 // URL pattern generators
 export const UrlPatterns: UrlPatternConfig = {
-  candidate: {
-    president: (slug: string) => `/candidates/president/us/${slug}/`,
-    senate: (state: string, slug: string) => `/candidates/senate/${state.toLowerCase()}/${slug}/`,
+  politician: {
+    president: (slug: string) => `/politicians/president/us/${slug}/`,
+    senate: (state: string, slug: string) => `/politicians/senate/${state.toLowerCase()}/${slug}/`,
     house: (state: string, district: string, slug: string) => {
       const districtPadded = district.toString().padStart(2, '0');
-      return `/candidates/house/${state.toLowerCase()}-${districtPadded}/${slug}/`;
+      return `/politicians/house/${state.toLowerCase()}-${districtPadded}/${slug}/`;
     }
   },
   committee: (type: string, slug: string, id: string) => `/committees/${type}/${slug}-${id.toLowerCase()}/`,
@@ -278,13 +278,13 @@ export function canonicalPath(entityType: string, id: string): string {
 
 // CMS-merged types and utilities
 export type {
-  CandidateMerged,
+  PoliticianMerged,
   CommitteeMerged,
   IndividualMerged,
 } from './types/cms-merged';
 
 export {
-  isCandidateMerged,
+  isPoliticianMerged,
   isCommitteeMerged,
   isIndividualMerged,
 } from './types/cms-merged';
