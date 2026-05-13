@@ -10,6 +10,7 @@
     "State":      { "plural": "states" },
     "District":   { "plural": "districts" },
     "Office":     { "plural": "offices" },
+    "Race":       { "plural": "races" },
     "Cycle":      { "plural": "elections" },
     "DataSource": { "plural": "datasources" },
     "County":     { "plural": "counties" },
